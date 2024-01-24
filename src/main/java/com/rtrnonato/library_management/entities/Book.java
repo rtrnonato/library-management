@@ -3,19 +3,22 @@ package com.rtrnonato.library_management.entities;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import com.rtrnonato.library_management.service.Loan;
 
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Book implements Serializable {
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id ;
 	private String title;
 	private String author;
@@ -25,7 +28,7 @@ public class Book implements Serializable {
 	private Integer total;
 	private Integer available; 
 	
-	List<Loan> loan = new ArrayList<>();
+	//List<Loan> loan = new ArrayList<>();
 
 	public Book() {
 		
@@ -106,13 +109,13 @@ public class Book implements Serializable {
 		this.available = available;
 	}
 
-	public List<Loan> getLoan() {
+	/*public List<Loan> getLoan() {
 		return loan;
 	}
 
 	public void setLoan(List<Loan> loan) {
 		this.loan = loan;
-	}
+	} */
 
 	@Override
 	public int hashCode() {
