@@ -7,25 +7,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.rtrnonato.library_management.entities.Book;
-import com.rtrnonato.library_management.services.BookService;
+import com.rtrnonato.library_management.entities.Loan;
+import com.rtrnonato.library_management.services.LoanService;
 
 @RestController
-@RequestMapping(value = "/books")
-public class BookResource {
+@RequestMapping(value = "/loans")
+public class LoanResource {
 	
 	@Autowired
-	private BookService service;
+	private LoanService service;
 	
 	@GetMapping
-	public ResponseEntity<List<Book>> findAll(){
-		List<Book> list = service.findAll();
+	public ResponseEntity<List<Loan>> findAll(){
+		List<Loan> list = service.findAll();
 		return ResponseEntity.ok().body(list);
 	}
 	
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Book> findById(@PathVariable Integer id) {
-    	Book obj = service.findById(id);
+    public ResponseEntity<Loan> findById(@PathVariable Integer id) {
+    	Loan obj = service.findById(id);
     	return ResponseEntity.ok().body(obj);
     	
     }

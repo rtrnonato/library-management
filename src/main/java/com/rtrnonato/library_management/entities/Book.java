@@ -12,8 +12,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "tb_book")
 public class Book implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
@@ -111,10 +113,6 @@ public class Book implements Serializable {
 
 	/*public List<Loan> getLoan() {
 		return loan;
-	}
-
-	public void setLoan(List<Loan> loan) {
-		this.loan = loan;
 	} */
 
 	@Override
@@ -133,8 +131,4 @@ public class Book implements Serializable {
 		Book other = (Book) obj;
 		return Objects.equals(id, other.id);
 	}
-	
-	
-	
-
 }
