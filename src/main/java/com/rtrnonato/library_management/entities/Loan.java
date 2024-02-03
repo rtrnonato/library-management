@@ -2,16 +2,21 @@ package com.rtrnonato.library_management.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
+import com.rtrnonato.library_management.entities.enums.LoanStatus;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -19,34 +24,38 @@ import jakarta.persistence.Table;
 @Table(name = "tb_loan")
 public class Loan implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
 	private Instant loan;
-	
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
 	private Instant devolution;
-	
-	private Book book;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
 	
+	@ManyToMany
+	@JoinTable(name = "loan_book", joinColumns = @JoinColumn(name = "loan_id"), inverseJoinColumns = @JoinColumn(name = "book_id"))
+    private Set<Book> book = new HashSet<>();
+    
+	private int loanStatus;
+
 	public Loan() {
-		
+
 	}
-	
-	public Loan(Integer id, Instant loan, Instant devolution, Book book, User user) {
-		super();
+
+	public Loan(Integer id, Instant loan, Instant devolution, User user, LoanStatus loanStatus, Set<Book> book) {
 		this.id = id;
 		this.loan = loan;
 		this.devolution = devolution;
-		this.book = book;
 		this.user = user;
+		this.book.addAll(book);
+		setLoanStatus(loanStatus);
 	}
 
 	public Integer getId() {
@@ -73,14 +82,6 @@ public class Loan implements Serializable {
 		this.devolution = devolution;
 	}
 
-	public Book getBook() {
-		return book;
-	}
-
-	public void setBook(Book book) {
-		this.book = book;
-	}
-
 	public User getUser() {
 		return user;
 	}
@@ -88,7 +89,25 @@ public class Loan implements Serializable {
 	public void setUser(User user) {
 		this.user = user;
 	}
+	
+	public Set<Book> getBook() {
+		return book;
+	}
 
+	public void setBook(Set<Book> book) {
+		this.book = book;
+	}
+
+	public LoanStatus getLoanStatus() {
+		return LoanStatus.valueOf(loanStatus);
+	}
+
+	public void setLoanStatus(LoanStatus loanStatus) {
+	  if (loanStatus != null) {
+		this.loanStatus = loanStatus.getCode();
+	  }
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

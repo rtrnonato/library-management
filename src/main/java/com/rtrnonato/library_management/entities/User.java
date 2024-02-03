@@ -32,7 +32,7 @@ public class User implements Serializable {
 		
 	}
 	
-	public User(Integer id, String name, String email, List<Loan> loan) {
+	public User(Integer id, String name, String email) {
 		this.id = id;
 		this.name = name;
 		this.email = email;
