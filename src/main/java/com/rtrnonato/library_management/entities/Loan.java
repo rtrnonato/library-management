@@ -18,6 +18,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -27,7 +28,7 @@ public class Loan implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private Long id;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
 	private Instant loan;
@@ -43,13 +44,16 @@ public class Loan implements Serializable {
 	@JoinTable(name = "loan_book", joinColumns = @JoinColumn(name = "loan_id"), inverseJoinColumns = @JoinColumn(name = "book_id"))
     private Set<Book> book = new HashSet<>();
     
+	@OneToMany(mappedBy = "id.loan")
+	private Set<LoanItem> items = new HashSet<>();
+	
 	private int loanStatus;
 
 	public Loan() {
 
 	}
 
-	public Loan(Integer id, Instant loan, Instant devolution, User user, LoanStatus loanStatus, Set<Book> book) {
+	public Loan(Long id, Instant loan, Instant devolution, User user, LoanStatus loanStatus, Set<Book> book) {
 		this.id = id;
 		this.loan = loan;
 		this.devolution = devolution;
@@ -58,11 +62,11 @@ public class Loan implements Serializable {
 		setLoanStatus(loanStatus);
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -108,6 +112,10 @@ public class Loan implements Serializable {
 	  }
 	}
 	
+	public Set<LoanItem> getItems() {
+		return items;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

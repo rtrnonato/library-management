@@ -14,9 +14,11 @@ import org.springframework.context.annotation.Profile;
 
 import com.rtrnonato.library_management.entities.Book;
 import com.rtrnonato.library_management.entities.Loan;
+import com.rtrnonato.library_management.entities.LoanItem;
 import com.rtrnonato.library_management.entities.User;
 import com.rtrnonato.library_management.entities.enums.LoanStatus;
 import com.rtrnonato.library_management.repositories.BookRepository;
+import com.rtrnonato.library_management.repositories.LoanItemRepository;
 import com.rtrnonato.library_management.repositories.LoanRepository;
 import com.rtrnonato.library_management.repositories.UserRepository;
 
@@ -32,6 +34,9 @@ public class TestConfig implements CommandLineRunner {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private LoanItemRepository loanItemRepository;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -50,6 +55,10 @@ public class TestConfig implements CommandLineRunner {
 		Loan l1 = new Loan(null, Instant.parse("2019-06-20T19:53:07Z"), Instant.parse("2023-06-20T19:53:07Z"), u1, LoanStatus.BORROWED,book);
 		
 		loanRepository.saveAll(Arrays.asList(l1));
+		
+		LoanItem li1 = new LoanItem(b1,l1,Instant.parse("2023-06-20T19:53:07Z"), l1.getDevolution());
+		
+	    loanItemRepository.saveAll(Arrays.asList(li1));
 		
 	}
 
