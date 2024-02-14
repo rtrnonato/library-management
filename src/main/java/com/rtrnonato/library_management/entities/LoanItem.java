@@ -31,6 +31,7 @@ public class LoanItem implements Serializable {
 		this.actualReturn = actualReturn;
 	}
 	
+	
 	public Book getBook() {
 		return id.getBook();
 	}
@@ -38,6 +39,7 @@ public class LoanItem implements Serializable {
 	public void setBook(Book book) {
 		id.setBook(book);
 	}
+	
 	 @JsonIgnore
 	public Loan getLoan() {
 		return id.getLoan();
@@ -46,6 +48,7 @@ public class LoanItem implements Serializable {
 	public void setLoan(Loan loan) {
 		id.setLoan(loan);
 	}
+	
 	 @JsonIgnore
 	public LoanItemPK getId() {
 		return id;

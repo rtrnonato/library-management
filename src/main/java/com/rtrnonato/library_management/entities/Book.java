@@ -8,11 +8,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -33,6 +36,9 @@ public class Book implements Serializable {
 	
 	@ManyToMany
 	private Set<Loan> loan = new HashSet<>();
+	
+	@OneToMany(mappedBy = "id.book")
+	private Set<LoanItem> items = new HashSet<>();
 
 	public Book() {
 		
@@ -119,6 +125,15 @@ public class Book implements Serializable {
 
 	public void setLoan(Set<Loan> loan) {
 		this.loan = loan;
+	}
+	
+	@JsonIgnore
+	public Set<Loan> getLoans() {
+		Set<Loan> set = new HashSet<>();
+		for (LoanItem x : items) {
+			set.add(x.getLoan());
+		}
+		return set;
 	}
 
 	@Override

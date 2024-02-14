@@ -115,7 +115,7 @@ public class Loan implements Serializable {
 	public Set<LoanItem> getItems() {
 		return items;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
