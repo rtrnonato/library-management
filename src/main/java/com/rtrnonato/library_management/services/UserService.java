@@ -18,7 +18,7 @@ public class UserService {
 		return repository.findAll();
 	}
 	
-	public User findById(Integer id) {
+	public User findById(Long id) {
 		Optional<User> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new NoSuchElementException("User not found with ID: " + id));
 	}
@@ -27,4 +27,8 @@ public class UserService {
 		return repository.save(obj);
 	}
 	
+	public void delete(Long id) {
+		repository.deleteById(id);
+	}	
+		
 }
