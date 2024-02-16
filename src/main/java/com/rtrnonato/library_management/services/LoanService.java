@@ -18,7 +18,7 @@ public class LoanService {
 		return repository.findAll();
 	}
 	
-	public Loan findById(Integer id) {
+	public Loan findById(Long id) {
 		Optional<Loan> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new NoSuchElementException("User not found with ID: " + id));
 	}

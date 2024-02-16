@@ -24,7 +24,7 @@ public class LoanResource {
 	}
 	
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Loan> findById(@PathVariable Integer id) {
+    public ResponseEntity<Loan> findById(@PathVariable Long id) {
     	Loan obj = service.findById(id);
     	return ResponseEntity.ok().body(obj);
     	
