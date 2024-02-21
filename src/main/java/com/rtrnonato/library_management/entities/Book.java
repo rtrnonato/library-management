@@ -3,20 +3,29 @@ package com.rtrnonato.library_management.entities;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
-import com.rtrnonato.library_management.service.Loan;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "tb_book")
 public class Book implements Serializable {
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	private Integer id ;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id ;
 	private String title;
 	private String author;
 	private String gender;
@@ -25,13 +34,17 @@ public class Book implements Serializable {
 	private Integer total;
 	private Integer available; 
 	
-	List<Loan> loan = new ArrayList<>();
+	@ManyToMany
+	private Set<Loan> loan = new HashSet<>();
+	
+	@OneToMany(mappedBy = "id.book")
+	private Set<LoanItem> items = new HashSet<>();
 
 	public Book() {
 		
 	}
 	
-	public Book(Integer id, String title, String author, String gender, LocalDate publication, Integer iSBN, Integer total, Integer available) {
+	public Book(Long id, String title, String author, String gender, LocalDate publication, Integer iSBN, Integer total, Integer available) {
 		this.id = id;
 		this.title = title;
 		this.author = author;
@@ -42,11 +55,11 @@ public class Book implements Serializable {
 		this.available = available;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -106,12 +119,21 @@ public class Book implements Serializable {
 		this.available = available;
 	}
 
-	public List<Loan> getLoan() {
+	public Set<Loan> getLoan() {
 		return loan;
 	}
 
-	public void setLoan(List<Loan> loan) {
+	public void setLoan(Set<Loan> loan) {
 		this.loan = loan;
+	}
+	
+	@JsonIgnore
+	public Set<Loan> getLoans() {
+		Set<Loan> set = new HashSet<>();
+		for (LoanItem x : items) {
+			set.add(x.getLoan());
+		}
+		return set;
 	}
 
 	@Override
@@ -130,8 +152,4 @@ public class Book implements Serializable {
 		Book other = (Book) obj;
 		return Objects.equals(id, other.id);
 	}
-	
-	
-	
-
 }
