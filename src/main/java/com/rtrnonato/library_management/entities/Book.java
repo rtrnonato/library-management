@@ -2,14 +2,10 @@ package com.rtrnonato.library_management.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -103,11 +99,11 @@ public class Book implements Serializable {
 		ISBN = iSBN;
 	}
 
-	public Integer getTootal() {
+	public Integer getTotal() {
 		return total;
 	}
 
-	public void setTootal(Integer total) {
+	public void setTotal(Integer total) {
 		this.total = total;
 	}
 

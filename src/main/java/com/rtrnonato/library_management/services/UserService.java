@@ -1,7 +1,6 @@
 package com.rtrnonato.library_management.services;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.rtrnonato.library_management.entities.User;
 import com.rtrnonato.library_management.repositories.UserRepository;
 import com.rtrnonato.library_management.services.exceptions.ResourceNotFoundException;
-
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
@@ -40,7 +38,6 @@ public class UserService {
 		} catch (EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException(id);
 		}
-
 	}
 
 	public User update(Long id, User obj) {
