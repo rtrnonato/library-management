@@ -1,7 +1,8 @@
 package com.rtrnonato.library_management.entities;
 
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -28,10 +29,10 @@ public class Loan implements Serializable {
 	private Long id;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
-	private Instant loan;
+	private LocalDate loan;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
-	private Instant devolution;
+	private LocalDate devolution;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
@@ -41,7 +42,7 @@ public class Loan implements Serializable {
 	@JoinTable(name = "loan_book", joinColumns = @JoinColumn(name = "loan_id"), inverseJoinColumns = @JoinColumn(name = "book_id"))
     private Set<Book> book = new HashSet<>();
     
-	@OneToMany(mappedBy = "id.loan")
+	@OneToMany(mappedBy = "loan")
 	private Set<LoanItem> items = new HashSet<>();
 	
 	private int loanStatus;
@@ -50,12 +51,12 @@ public class Loan implements Serializable {
 
 	}
 
-	public Loan(Long id, Instant loan, Instant devolution, User user, LoanStatus loanStatus, Set<Book> book) {
+	public Loan(Long id, LocalDate loan, LocalDate devolution, User user, LoanStatus loanStatus, Set<Book> book) {
 		this.id = id;
 		this.loan = loan;
 		this.devolution = devolution;
 		this.user = user;
-		this.book.addAll(book);
+		this.book = book;
 		setLoanStatus(loanStatus);
 	}
 
@@ -67,19 +68,19 @@ public class Loan implements Serializable {
 		this.id = id;
 	}
 
-	public Instant getLoan() {
+	public LocalDate getLoan() {
 		return loan;
 	}
 
-	public void setLoan(Instant loan) {
+	public void setLoan(LocalDate loan) {
 		this.loan = loan;
 	}
 
-	public Instant getDevolution() {
+	public LocalDate getDevolution() {
 		return devolution;
 	}
 
-	public void setDevolution(Instant devolution) {
+	public void setDevolution(LocalDate devolution) {
 		this.devolution = devolution;
 	}
 

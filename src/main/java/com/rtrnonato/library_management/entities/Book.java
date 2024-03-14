@@ -123,6 +123,10 @@ public class Book implements Serializable {
 		this.loan = loan;
 	}
 	
+	public void decrementAvailable() {
+		this.available--;
+	}
+	
 	@JsonIgnore
 	public Set<Loan> getLoans() {
 		Set<Loan> set = new HashSet<>();
@@ -131,7 +135,7 @@ public class Book implements Serializable {
 		}
 		return set;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import com.rtrnonato.library_management.repositories.BookRepository;
 import com.rtrnonato.library_management.repositories.LoanItemRepository;
 import com.rtrnonato.library_management.repositories.LoanRepository;
 import com.rtrnonato.library_management.repositories.UserRepository;
+import com.rtrnonato.library_management.services.LoanService;
 
 @Configuration
 @Profile("test")
@@ -37,6 +39,9 @@ public class TestConfig implements CommandLineRunner {
 	
 	@Autowired
 	private LoanItemRepository loanItemRepository;
+	
+	@Autowired
+	private LoanService loanService;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -46,19 +51,16 @@ public class TestConfig implements CommandLineRunner {
 		User u1 = new User(null,"Ana","ana@gmail.com");
 		
 		bookRepository.saveAll(Arrays.asList(b1,b2));
-		
 		userRepository.saveAll(Arrays.asList(u1));
 		
-		Set<Book> book = new HashSet<>();
-		book.add(b1);
-		book.add(b2);
-		Loan l1 = new Loan(null, Instant.parse("2019-06-20T19:53:07Z"), Instant.parse("2023-06-20T19:53:07Z"), u1, LoanStatus.BORROWED,book);
+		List<Long> bookIds = Arrays.asList(b1.getId(), b2.getId());
+		Loan loan = loanService.createLoan(bookIds, u1.getId());
 		
-		loanRepository.saveAll(Arrays.asList(l1));
-		
-		LoanItem li1 = new LoanItem(b1,l1,Instant.parse("2023-06-20T19:53:07Z"), l1.getDevolution());
-		
-	    loanItemRepository.saveAll(Arrays.asList(li1));
+		if (loan != null) {
+            System.out.println("Empréstimo criado com sucesso: " + loan);
+        } else {
+            System.out.println("Falha ao criar o empréstimo");
+        }
 		
 	}
 
