@@ -24,6 +24,10 @@ import com.rtrnonato.library_management.repositories.LoanRepository;
 import com.rtrnonato.library_management.repositories.UserRepository;
 import com.rtrnonato.library_management.services.LoanService;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
+
 @Configuration
 @Profile("test")
 public class TestConfig implements CommandLineRunner {
@@ -42,8 +46,12 @@ public class TestConfig implements CommandLineRunner {
 	
 	@Autowired
 	private LoanService loanService;
+	
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	@Override
+	@Transactional
 	public void run(String... args) throws Exception {
 		
 		Book b1 = new Book(null,"A","a","a",LocalDate.of(2023, Month.JANUARY, 6),563723,20,10);
@@ -62,6 +70,20 @@ public class TestConfig implements CommandLineRunner {
             System.out.println("Falha ao criar o empréstimo");
         }
 		
+		loanRepository.save(loan);
+		
+		List<Long> loanIds = Arrays.asList(loan.getId());
+		loanService.returnBooks(loanIds);
+		
+		entityManager.flush();
+	    entityManager.clear();
+		
+		System.out.println(loan.getLoanStatus());
+		if (loan.getLoanStatus() == LoanStatus.DELIVERED) {
+			System.out.println("Livros devolvidos com sucesso: " + loan);
+		} else {
+            System.out.println("Falha ao devolver os livros");
+        }
+		
 	}
-
 }

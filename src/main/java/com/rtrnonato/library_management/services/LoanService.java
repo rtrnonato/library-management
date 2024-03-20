@@ -13,66 +13,107 @@ import org.springframework.stereotype.Service;
 
 import com.rtrnonato.library_management.entities.Book;
 import com.rtrnonato.library_management.entities.Loan;
+import com.rtrnonato.library_management.entities.LoanItem;
 import com.rtrnonato.library_management.entities.User;
 import com.rtrnonato.library_management.entities.enums.LoanStatus;
+import com.rtrnonato.library_management.entities.pk.LoanItemPK;
 import com.rtrnonato.library_management.repositories.BookRepository;
+import com.rtrnonato.library_management.repositories.LoanItemRepository;
 import com.rtrnonato.library_management.repositories.LoanRepository;
 import com.rtrnonato.library_management.repositories.UserRepository;
 
 @Service
 public class LoanService {
-	
+
 	@Autowired
 	private LoanRepository loanRepository;
-	
+
 	@Autowired
-    private BookRepository bookRepository;
-    
-    @Autowired
-    private UserRepository userRepository;
-	
+	private BookRepository bookRepository;
+
+	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
+	private LoanItemRepository loanItemRepository;
+
 	public List<Loan> findAll() {
 		return loanRepository.findAll();
 	}
-	
+
 	public Loan findById(Long id) {
 		Optional<Loan> obj = loanRepository.findById(id);
 		return obj.orElseThrow(() -> new NoSuchElementException("User not found with ID: " + id));
 	}
-	
+
 	public Loan createLoan(List<Long> bookIds, Long userId) {
-	    User user = userRepository.findById(userId)
-	        .orElseThrow(() -> new NoSuchElementException("User not found with ID: " + userId));
-	    
-	    List<Loan> loans = new ArrayList<>();
-	    Set<Book> books = new HashSet<>();
-	    for (Long bookId : bookIds) {
-	        Book book = bookRepository.findById(bookId)
-	            .orElseThrow(() -> new NoSuchElementException("Book not found with ID: " + bookId));
-	        
-	        if (book.getAvailable() <= 0) {
-	            throw new IllegalArgumentException("Book with ID " + bookId + " is not available for loan.");
-	        }
-	        
-	        book.decrementAvailable();
-	        bookRepository.save(book);
-	        books.add(book);
-	        
-	        Loan loan = new Loan();
-	        loan.setBook(books);
-	        loan.setUser(user);
-	        loan.setLoan(LocalDate.now());
-	        loan.setLoanStatus(LoanStatus.BORROWED);
-	        
-	        loans.add(loanRepository.save(loan));
-	    }
-	    
-	    if (!loans.isEmpty()) {
-	        return loans.get(0);
-	    } else {
-	        throw new IllegalStateException("No loans created");
-	    }
+		User user = userRepository.findById(userId)
+				.orElseThrow(() -> new NoSuchElementException("User not found with ID: " + userId));
+
+		Loan loan = new Loan();
+		loan.setUser(user);
+		loan.setLoan(LocalDate.now());
+		loan.setLoanStatus(LoanStatus.BORROWED);
+		Set<LoanItem> loanItems = new HashSet<>();
+		Set<Book> books = new HashSet<>();
+		for (Long bookId : bookIds) {
+			Book book = bookRepository.findById(bookId)
+					.orElseThrow(() -> new NoSuchElementException("Book not found with ID: " + bookId));
+
+			if (book.getAvailable() <= 0) {
+				throw new IllegalArgumentException("Book with ID " + bookId + " is not available for loan.");
+			}
+
+			book.decrementAvailable();
+			bookRepository.save(book);
+			books.add(book);
+
+			loan.setBook(books);
+			loanRepository.save(loan);
+
+			LoanItem loanItem = new LoanItem();
+			loanItem.setBook(book);
+			loanItem.setLoan(loan);
+			loanItem.setExpectedReturn(LocalDate.now().plusDays(30));
+
+			loanItems.add(loanItem);
+			loanItemRepository.save(loanItem);
+		}
+
+		loan.setItems(loanItems);
+
+		if (!loanItems.isEmpty()) {
+			return loan;
+		} else {
+			throw new IllegalStateException("No loan created");
+		}
 	}
 
-	
+	public void returnBooks(List<Long> loanIds) {
+		for (Long loanId : loanIds) {
+			Loan loan = loanRepository.findById(loanId)
+					.orElseThrow(() -> new NoSuchElementException("Loan not found with ID: " + loanId));
+
+			if (loan.getLoanStatus() != LoanStatus.BORROWED) {
+				throw new IllegalArgumentException("Loan with ID " + loanId + " is not currently borrowed.");
+			}
+
+			loan.setLoanStatus(LoanStatus.DELIVERED);
+
+			System.out.println("the loan" + loanId + "status is now DELIVERED");
+
+			loan.setDevolution(LocalDate.now());
+
+			for (LoanItem loanItem : loan.getItems()) {
+				Book book = loanItem.getBook();
+				book.incrementAvailable();
+				loanItem.setActualReturn(LocalDate.now());
+				bookRepository.save(book);
+			}
+
+			loanRepository.save(loan);
+			
+			System.out.println(loan.getLoanStatus());
+		}
+	}
 }

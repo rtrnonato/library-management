@@ -40,5 +40,11 @@ public class LoanResource {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(loan.getId()).toUri();
         return ResponseEntity.created(uri).body(loan);
     }
+    
+    @PostMapping(value = "/return")
+    public ResponseEntity<Void> returnBooks(@RequestBody List<Long> loanIds) {
+        service.returnBooks(loanIds);
+        return ResponseEntity.ok().build();
+    }
 
 }

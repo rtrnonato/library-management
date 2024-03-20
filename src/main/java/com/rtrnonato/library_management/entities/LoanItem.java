@@ -1,15 +1,20 @@
 package com.rtrnonato.library_management.entities;
 
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rtrnonato.library_management.entities.pk.LoanItemPK;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -24,20 +29,21 @@ public class LoanItem implements Serializable {
 	@JoinColumn(name = "loan_item_id")
 	private Loan loan;
 	
-	private Instant expectedReturn;
-	private Instant actualReturn;
+	@OneToMany(fetch = FetchType.EAGER)
+    private Set<LoanItem> items = new HashSet<>();
+	
+	private LocalDate expectedReturn;
+	private LocalDate actualReturn;
 	
 	public LoanItem() {
-		
 	}
 	
-	public LoanItem(Book book, Loan loan, Instant expectedReturn, Instant actualReturn) {
+	public LoanItem(Book book, Loan loan, LocalDate expectedReturn, LocalDate actualReturn) {
 		id.setBook(book);
 		id.setLoan(loan);
 		this.expectedReturn = expectedReturn;
 		this.actualReturn = actualReturn;
 	}
-	
 	
 	public Book getBook() {
 		return id.getBook();
@@ -65,19 +71,19 @@ public class LoanItem implements Serializable {
 		this.id = id;
 	}
 
-	public Instant getExpectedReturn() {
+	public LocalDate getExpectedReturn() {
 		return expectedReturn;
 	}
 
-	public void setExpectedReturn(Instant expectedReturn) {
+	public void setExpectedReturn(LocalDate expectedReturn) {
 		this.expectedReturn = expectedReturn;
 	}
 
-	public Instant getActualReturn() {
+	public LocalDate getActualReturn() {
 		return actualReturn;
 	}
 
-	public void setActualReturn(Instant actualReturn) {
+	public void setActualReturn(LocalDate actualReturn) {
 		this.actualReturn = actualReturn;
 	}
 

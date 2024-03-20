@@ -18,6 +18,8 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 @Table(name = "tb_loan")
@@ -43,6 +45,7 @@ public class Loan implements Serializable {
     private Set<Book> book = new HashSet<>();
     
 	@OneToMany(mappedBy = "loan")
+	@Fetch(FetchMode.JOIN)
 	private Set<LoanItem> items = new HashSet<>();
 	
 	private int loanStatus;
@@ -105,15 +108,17 @@ public class Loan implements Serializable {
 	}
 
 	public void setLoanStatus(LoanStatus loanStatus) {
-	  if (loanStatus != null) {
 		this.loanStatus = loanStatus.getCode();
-	  }
 	}
 	
 	public Set<LoanItem> getItems() {
 		return items;
 	}
 	
+	public void setItems(Set<LoanItem> items) {
+		this.items = items;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

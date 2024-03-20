@@ -127,6 +127,10 @@ public class Book implements Serializable {
 		this.available--;
 	}
 	
+	public void incrementAvailable() {
+		this.available++;
+	}
+	
 	@JsonIgnore
 	public Set<Loan> getLoans() {
 		Set<Loan> set = new HashSet<>();
