@@ -3,12 +3,14 @@ package com.rtrnonato.library_management.services;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.rtrnonato.library_management.entities.Book;
@@ -21,6 +23,9 @@ import com.rtrnonato.library_management.repositories.BookRepository;
 import com.rtrnonato.library_management.repositories.LoanItemRepository;
 import com.rtrnonato.library_management.repositories.LoanRepository;
 import com.rtrnonato.library_management.repositories.UserRepository;
+import com.rtrnonato.library_management.services.exceptions.ResourceNotFoundException;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class LoanService {
@@ -115,5 +120,39 @@ public class LoanService {
 			
 			System.out.println(loan.getLoanStatus());
 		}
+	}
+	
+	public void deleteLoan(List<Long> loanIds) {
+		try {
+			for (Long loanId : loanIds) {
+				if (!loanRepository.existsById(loanId)) {
+				throw new ResourceNotFoundException(loanIds);
+				}
+				loanRepository.deleteById(loanId);
+			}
+			
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException(loanIds);
+		}
+	}
+	
+	public Loan updateLoan(Long loanId, Loan obj) {
+		try {
+		    Loan entity = loanRepository.getReferenceById(loanId);
+		    updateData(entity, obj);
+		    return loanRepository.save(entity);
+		} catch(EntityNotFoundException e) {
+			e.printStackTrace();
+			throw new ResourceNotFoundException(loanId);
+		}
+	}
+	
+	private void updateData(Loan entity, Loan obj) {
+		entity.setLoan(obj.getLoan());
+		entity.setDevolution(obj.getDevolution());
+		entity.setUser(obj.getUser());
+		entity.setBook(obj.getBook());
+		entity.setItems(obj.getItems());
+		entity.setLoanStatus(obj.getLoanStatus());
 	}
 }

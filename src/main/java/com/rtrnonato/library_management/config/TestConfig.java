@@ -58,6 +58,10 @@ public class TestConfig implements CommandLineRunner {
 		Book b2 = new Book(null,"B","b","b",LocalDate.of(2012, Month.JANUARY, 7),3453,10,40);
 		User u1 = new User(null,"Ana","ana@gmail.com");
 		
+		Book b3 = new Book(null,"e","e","e",LocalDate.of(2023, Month.JANUARY, 6),1231,67,12);
+		Book b4 = new Book(null,"z","z","z",LocalDate.of(2013, Month.AUGUST,10),3234234,12,23);
+		User u2 = new User(null,"Maria","maria@gmail.com");
+		
 		bookRepository.saveAll(Arrays.asList(b1,b2));
 		userRepository.saveAll(Arrays.asList(u1));
 		
@@ -65,14 +69,47 @@ public class TestConfig implements CommandLineRunner {
 		Loan loan = loanService.createLoan(bookIds, u1.getId());
 		
 		if (loan != null) {
-            System.out.println("Empréstimo criado com sucesso: " + loan);
+            System.out.println("Empréstimo criado1 com sucesso: " + loan);
         } else {
             System.out.println("Falha ao criar o empréstimo");
         }
 		
 		loanRepository.save(loan);
 		
-		List<Long> loanIds = Arrays.asList(loan.getId());
+		List<Long> bookIds2 = Arrays.asList(b3.getId(), b4.getId());
+		Loan loan2 = loanService.createLoan(bookIds2, u2.getId());
+		
+		loanRepository.save(loan2);
+		
+		if (loan2 != null) {
+            System.out.println("Empréstimo criado2 com sucesso: " + loan2);
+        } else {
+            System.out.println("Falha ao criar o empréstimo");
+        }
+		
+		Loan updateLoan = loanService.updateLoan(loan.getId(), loan2);
+		
+		loanRepository.save(updateLoan);
+		
+		if (updateLoan != null) {
+            System.out.println("Empréstimo atualizado com sucesso: " + updateLoan);
+        } else {
+            System.out.println("Falha ao atualizar o empréstimo");
+        }
+		
+		List<Long> loanIds = Arrays.asList(updateLoan.getId());
+		
+		loanService.deleteLoan(loanIds);
+		
+		loanRepository.save(updateLoan);
+		
+		if (updateLoan == null) {
+            System.out.println("Empréstimo deletado com sucesso: " + updateLoan);
+        } else {
+            System.out.println("Falha ao deletar o empréstimo");
+        }
+		
+		/*List<Long> loanIds = Arrays.asList(loan.getId());
 		loanService.returnBooks(loanIds);
 		
 		entityManager.flush();
@@ -83,7 +120,7 @@ public class TestConfig implements CommandLineRunner {
 			System.out.println("Livros devolvidos com sucesso: " + loan);
 		} else {
             System.out.println("Falha ao devolver os livros");
-        }
+        }*/
 		
 	}
 }
