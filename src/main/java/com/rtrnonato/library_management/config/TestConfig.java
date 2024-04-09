@@ -54,7 +54,7 @@ public class TestConfig implements CommandLineRunner {
 	@Transactional
 	public void run(String... args) throws Exception {
 		
-		Book b1 = new Book(null,"A","a","a",LocalDate.of(2023, Month.JANUARY, 6),563723,20,10);
+		/*Book b1 = new Book(null,"A","a","a",LocalDate.of(2023, Month.JANUARY, 6),563723,20,10);
 		Book b2 = new Book(null,"B","b","b",LocalDate.of(2012, Month.JANUARY, 7),3453,10,40);
 		User u1 = new User(null,"Ana","ana@gmail.com");
 		
@@ -121,6 +121,5 @@ public class TestConfig implements CommandLineRunner {
 		} else {
             System.out.println("Falha ao devolver os livros");
         }*/
-		
 	}
 }

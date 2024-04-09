@@ -1,6 +1,5 @@
 package com.rtrnonato.library_management.services;
 
-
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -14,19 +13,19 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class BookService {
-	
+
 	@Autowired
 	private BookRepository repository;
-	
+
 	public List<Book> findAll() {
 		return repository.findAll();
 	}
-	
+
 	public Book findById(Long id) {
 		Optional<Book> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new NoSuchElementException("User not found with ID: " + id));
 	}
-	
+
 	public Book insert(Book obj) {
 		return repository.save(obj);
 	}
@@ -44,10 +43,10 @@ public class BookService {
 
 	public Book update(Long id, Book obj) {
 		try {
-		    Book entity = repository.getReferenceById(id);
-		    updateData(entity, obj);
-		    return repository.save(entity);
-		} catch(EntityNotFoundException e) {
+			Book entity = repository.getReferenceById(id);
+			updateData(entity, obj);
+			return repository.save(entity);
+		} catch (EntityNotFoundException e) {
 			e.printStackTrace();
 			throw new ResourceNotFoundException(id);
 		}
