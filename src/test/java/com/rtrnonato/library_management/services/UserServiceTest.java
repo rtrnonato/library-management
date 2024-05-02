@@ -3,30 +3,20 @@ package com.rtrnonato.library_management.services;
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
 import com.rtrnonato.library_management.entities.User;
-import com.rtrnonato.library_management.entities.User;
-import com.rtrnonato.library_management.entities.User;
-import com.rtrnonato.library_management.entities.Loan;
-import com.rtrnonato.library_management.entities.User;
-import com.rtrnonato.library_management.entities.enums.LoanStatus;
 import com.rtrnonato.library_management.repositories.UserRepository;
 import com.rtrnonato.library_management.services.exceptions.ResourceNotFoundException;
 import com.rtrnonato.library_management.repositories.LoanItemRepository;
 import com.rtrnonato.library_management.repositories.LoanRepository;
-import com.rtrnonato.library_management.repositories.UserRepository;
 
 public class UserServiceTest {
 

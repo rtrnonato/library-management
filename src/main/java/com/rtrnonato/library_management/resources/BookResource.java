@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.rtrnonato.library_management.entities.Book;
@@ -34,7 +35,7 @@ public class BookResource {
     	Book obj = service.findById(id);
     	return ResponseEntity.ok().body(obj);
     }
-
+    
     @PostMapping
     public ResponseEntity<Book> insert(@RequestBody Book obj) {
     	obj = service.insert(obj);

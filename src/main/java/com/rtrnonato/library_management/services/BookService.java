@@ -3,6 +3,7 @@ package com.rtrnonato.library_management.services;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -25,11 +26,26 @@ public class BookService {
 		Optional<Book> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new NoSuchElementException("User not found with ID: " + id));
 	}
-
+	
 	public Book insert(Book obj) {
 		return repository.save(obj);
 	}
 
+	/*public void delete(Long id) {
+	    try {
+	        if (!repository.existsById(id)) {
+	            throw new ResourceNotFoundException("Book not found with ID: " + id);
+	        }
+	        repository.deleteById(id);
+	    } catch (EmptyResultDataAccessException e) {
+	        throw new ResourceNotFoundException("Book not found with ID: " + id, e);
+	    } catch (Exception e) {
+	        // Adicionando log de exceção para facilitar a depuração
+	        logger.error("An error occurred while deleting the book with ID: " + id, e);
+	        throw new RuntimeException("Failed to delete the book with ID: " + id, e);
+	    }
+	}*/
+	
 	public void delete(Long id) {
 		try {
 			if (!repository.existsById(id)) {
@@ -57,8 +73,12 @@ public class BookService {
 		entity.setAuthor(obj.getAuthor());
 		entity.setGender(obj.getGender());
 		entity.setPublication(obj.getPublication());
-		entity.setISBN(obj.getISBN());
-		entity.setTotal(obj.getTotal());
+		if (obj.getISBN() != null) {
+	        entity.setISBN(obj.getISBN());
+	    }
+		if (obj.getTotal() != null) {
+	        entity.setTotal(obj.getTotal());
+	    }
 		entity.setAvailable(obj.getAvailable());
 	}
 }

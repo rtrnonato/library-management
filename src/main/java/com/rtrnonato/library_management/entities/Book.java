@@ -5,7 +5,9 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,6 +16,9 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+/**
+ * Representa um livro na biblioteca.
+ */
 @Entity
 @Table(name = "tb_book")
 public class Book implements Serializable {
@@ -21,32 +26,69 @@ public class Book implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id ;
-	private String title;
-	private String author;
-	private String gender;
-	private LocalDate publication;
-	private Integer ISBN;
-	private Integer total;
-	private Integer available; 
+	private Long id;
 	
+	// Título do livro
+    private String title;
+
+    // Autor do livro
+    private String author;
+
+    // Gênero do livro
+    private String gender;
+
+    // Data de publicação do livro
+    private LocalDate publication;
+
+    // Número ISBN do livro
+    private Integer ISBN;
+
+    // Total de exemplares do livro
+    private Integer total;
+
+    // Número de exemplares disponíveis do livro
+    private Integer available;
+    
+    // Conjunto de empréstimos associados ao livro
 	@ManyToMany
 	private Set<Loan> loan = new HashSet<>();
 	
-	@OneToMany(mappedBy = "id.book")
+	// Conjunto de itens de empréstimo associados ao livro
+	@OneToMany(mappedBy = "book")
 	private Set<LoanItem> items = new HashSet<>();
 
+	/**
+     * Construtor padrão.
+     */
 	public Book() {
-		
 	}
 	
+	/**
+     * Construtor com argumentos.
+     * 
+     * @param id Identificador do livro
+     * @param title Título do livro
+     * @param author Autor do livro
+     * @param gender Gênero do livro
+     * @param publication Data de publicação do livro
+     * @param ISBN Número ISBN do livro
+     * @param total Total de exemplares do livro
+     * @param available Número de exemplares disponíveis do livro
+     */
 	public Book(Long id, String title, String author, String gender, LocalDate publication, Integer iSBN, Integer total, Integer available) {
+		if (title == null || title.trim().isEmpty()) {
+	        throw new IllegalArgumentException("Title cannot be null or empty");
+	    }
+	    if (author == null || author.trim().isEmpty()) {
+	        throw new IllegalArgumentException("Author cannot be null or empty");
+	    }
+	    
 		this.id = id;
 		this.title = title;
 		this.author = author;
 		this.gender = gender;
 		this.publication = publication;
-		ISBN = iSBN;
+		this.ISBN = iSBN;
 		this.total = total;
 		this.available = available;
 	}
@@ -96,7 +138,13 @@ public class Book implements Serializable {
 	}
 
 	public void setISBN(Integer iSBN) {
-		ISBN = iSBN;
+		if (iSBN == null) {
+	        throw new IllegalArgumentException("ISBN cannot be null");
+		}
+		if (ISBN < 0) {
+	        throw new IllegalArgumentException("ISBN cannot be negative");
+	    }
+		this.ISBN = iSBN;
 	}
 
 	public Integer getTotal() {
@@ -104,6 +152,9 @@ public class Book implements Serializable {
 	}
 
 	public void setTotal(Integer total) {
+		if (total < 0) {
+	        throw new IllegalArgumentException("Total cannot be negative");
+	    }
 		this.total = total;
 	}
 
@@ -123,21 +174,36 @@ public class Book implements Serializable {
 		this.loan = loan;
 	}
 	
-	public void decrementAvailable() {
-		this.available--;
-	}
-	
-	public void incrementAvailable() {
-		this.available++;
-	}
-	
-	@JsonIgnore
+	/**
+     * Obtém o conjunto de empréstimos associados ao livro.
+     * 
+     * @return Conjunto de empréstimos
+     */
 	public Set<Loan> getLoans() {
 		Set<Loan> set = new HashSet<>();
 		for (LoanItem x : items) {
 			set.add(x.getLoan());
 		}
 		return set;
+	}
+	
+	/**
+     * Decrementa o número de exemplares disponíveis do livro.
+     * Lança uma exceção se o número disponível já for zero.
+     */
+	public void decrementAvailable() {
+		if (this.available > 0) {
+		this.available--;
+		} else {
+			throw new IllegalStateException("Cannot decrement available books below zero");
+		}
+	}
+	
+	/**
+     * Incrementa o número de exemplares disponíveis do livro.
+     */
+	public void incrementAvailable() {
+		this.available++;
 	}
 	
 	@Override

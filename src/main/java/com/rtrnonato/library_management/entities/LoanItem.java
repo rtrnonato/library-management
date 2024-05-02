@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rtrnonato.library_management.entities.pk.LoanItemPK;
 import jakarta.persistence.EmbeddedId;
@@ -13,7 +14,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -32,7 +32,10 @@ public class LoanItem implements Serializable {
 	@OneToMany(fetch = FetchType.EAGER)
     private Set<LoanItem> items = new HashSet<>();
 	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "GMT")
 	private LocalDate expectedReturn;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "GMT")
 	private LocalDate actualReturn;
 	
 	public LoanItem() {
