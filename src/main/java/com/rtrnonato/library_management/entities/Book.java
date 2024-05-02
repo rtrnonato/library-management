@@ -5,9 +5,6 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -76,6 +73,7 @@ public class Book implements Serializable {
      * @param available Número de exemplares disponíveis do livro
      */
 	public Book(Long id, String title, String author, String gender, LocalDate publication, Integer iSBN, Integer total, Integer available) {
+		// Verificações para garantir que parâmetros essenciais não sejam nulos
 		if (title == null || title.trim().isEmpty()) {
 	        throw new IllegalArgumentException("Title cannot be null or empty");
 	    }

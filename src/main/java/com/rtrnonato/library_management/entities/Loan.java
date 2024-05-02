@@ -20,6 +20,9 @@ import jakarta.persistence.Table;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+/**
+ * Representa um emprestimo de livro.
+ */
 @Entity
 @Table(name = "tb_loan")
 public class Loan implements Serializable {
@@ -29,31 +32,62 @@ public class Loan implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	// Data do empréstimo
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "GMT")
 	private LocalDate loan;
 
+	// Data de devolução
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "GMT")
 	private LocalDate devolution;
 
+	// Usuário que realizou o empréstimo
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
 	
+	// Livros emprestados
 	@ManyToMany
 	@JoinTable(name = "loan_book", joinColumns = @JoinColumn(name = "loan_id"), inverseJoinColumns = @JoinColumn(name = "book_id"))
     private Set<Book> book = new HashSet<>();
     
+	// Itens do empréstimo
 	@OneToMany(mappedBy = "loan")
 	@Fetch(FetchMode.JOIN)
 	private Set<LoanItem> items = new HashSet<>();
 	
+	// Status do empréstimo
 	private int loanStatus;
 
+	/**
+     * Construtor padrão.
+     */
 	public Loan() {
-
 	}
 
+	 /**
+     * Construtor com argumentos.
+     *
+     * @param id Identificador do empréstimo
+     * @param loan Data do empréstimo
+     * @param devolution Data de devolução
+     * @param user Usuário que realizou o empréstimo
+     * @param loanStatus Status do empréstimo
+     * @param book Livros emprestados
+     * @throws IllegalArgumentException Se a data do empréstimo for nula, se o usuário for nulo
+     *                                  ou se nenhum livro for fornecido
+     */
 	public Loan(Long id, LocalDate loan, LocalDate devolution, User user, LoanStatus loanStatus, Set<Book> book) {
+		// Verificações para garantir que parâmetros essenciais não sejam nulos
+		if (loan == null) {
+			throw new IllegalArgumentException("Loan date cannot be null");
+		}
+		if (user == null) {
+			throw new IllegalArgumentException("User cannot be null");
+		}
+		if (book == null || book.isEmpty()) {
+            throw new IllegalArgumentException("At least one book must be provided");
+        }
+		
 		this.id = id;
 		this.loan = loan;
 		this.devolution = devolution;
