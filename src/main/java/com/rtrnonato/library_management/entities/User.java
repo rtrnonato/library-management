@@ -14,6 +14,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+/**
+ * Representa um usuário no sistema.
+ */
 @Entity
 @Table(name = "tb_user")
 public class User implements Serializable {
@@ -22,18 +25,39 @@ public class User implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	//O nome do usuário.
 	private String name;
+	
+	//O email do usuário.
 	private String email;
 	
-	@JsonIgnore
+	//Lista de empréstimos associados ao usuário
 	@OneToMany(mappedBy = "user")
 	List<Loan> loan = new ArrayList<>();
 
+	/**
+     * Construtor padrão.
+     */
 	public User() {
-		
 	}
 	
+	/**
+     * Construtor com argumentos.
+     * 
+     * @param id    O identificador do usuário.
+     * @param name  O nome do usuário.
+     * @param email O email do usuário.
+     * @throws IllegalArgumentException Se o nome ou o email forem nulos ou vazios.
+     */
 	public User(Long id, String name, String email) {
+		if (name == null || name.trim().isEmpty()) {
+	        throw new IllegalArgumentException("name cannot be null or empty");
+	    }
+	    if (email == null || email.trim().isEmpty()) {
+	        throw new IllegalArgumentException("email cannot be null or empty");
+	    }
+	    
 		this.id = id;
 		this.name = name;
 		this.email = email;
