@@ -12,8 +12,14 @@ import com.rtrnonato.library_management.services.exceptions.ResourceNotFoundExce
 
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * Classe de teste para ResourceExceptionHandler.
+ */
 public class ResourceExceptionHandlerTest {
 	
+	/**
+     * Testa o tratamento de exceção para ResourceNotFoundException, verificando se o status retornado é NOT_FOUND.
+     */
 	@Test
 	public void resourceNotFound_ShouldReturnNotFoundStatus() {
 		// Arrange
@@ -28,6 +34,9 @@ public class ResourceExceptionHandlerTest {
 		assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 	}
 
+	/**
+     * Testa o tratamento de exceção para ResourceNotFoundException, verificando se o objeto StandardError retornado contém a mensagem e o status corretos.
+     */
 	@Test
 	public void resourceNotFound_ShouldReturnStandardError() {
 		// Arrange
@@ -45,6 +54,9 @@ public class ResourceExceptionHandlerTest {
 		assertEquals(HttpStatus.NOT_FOUND.value(), error.getStatus());
 	}
 
+	/**
+     * Testa o tratamento de exceção para EmptyResultDataAccessException, verificando se o status retornado é NOT_FOUND.
+     */
 	@Test
 	public void emptyResultDataAccessException_ShouldReturnNotFoundStatus() {
 		// Arrange
@@ -59,6 +71,9 @@ public class ResourceExceptionHandlerTest {
 		assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 	}
 
+	/**
+     * Testa o tratamento de exceção para EmptyResultDataAccessException, verificando se o objeto StandardError retornado contém a mensagem e o status corretos.
+     */
 	@Test
 	public void emptyResultDataAccessException_ShouldReturnStandardError() {
 		// Arrange

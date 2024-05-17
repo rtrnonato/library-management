@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rtrnonato.library_management.entities.enums.LoanStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -52,7 +53,6 @@ public class Loan implements Serializable {
     
 	// Itens do empréstimo
 	@OneToMany(mappedBy = "loan")
-	@Fetch(FetchMode.JOIN)
 	private Set<LoanItem> items = new HashSet<>();
 	
 	// Status do empréstimo
@@ -99,31 +99,34 @@ public class Loan implements Serializable {
 	public Long getId() {
 		return id;
 	}
-
+	
+	
 	public void setId(Long id) {
 		this.id = id;
 	}
 
+	
 	public LocalDate getLoan() {
 		return loan;
 	}
-
+	
 	public void setLoan(LocalDate loan) {
 		this.loan = loan;
 	}
-
+	
 	public LocalDate getDevolution() {
 		return devolution;
 	}
-
+	
 	public void setDevolution(LocalDate devolution) {
 		this.devolution = devolution;
 	}
-
+	
+	@JsonIgnore
 	public User getUser() {
 		return user;
 	}
-
+	
 	public void setUser(User user) {
 		this.user = user;
 	}
@@ -131,15 +134,15 @@ public class Loan implements Serializable {
 	public Set<Book> getBook() {
 		return book;
 	}
-
+	
 	public void setBook(Set<Book> book) {
 		this.book = book;
 	}
-
+	
 	public LoanStatus getLoanStatus() {
 		return LoanStatus.valueOf(loanStatus);
 	}
-
+	
 	public void setLoanStatus(LoanStatus loanStatus) {
 		this.loanStatus = loanStatus.getCode();
 	}

@@ -7,7 +7,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rtrnonato.library_management.entities.pk.LoanItemPK;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -33,6 +32,11 @@ public class LoanItem implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "loan_item_id")
 	private Loan loan;
+	
+	// Livro associado a este item de empréstimo.
+	@ManyToOne
+	@JoinColumn(name = "book_item_id")
+	private Book bookItem;
 	
 	// Conjunto de itens de empréstimo associados a este item.
 	@OneToMany(fetch = FetchType.EAGER)

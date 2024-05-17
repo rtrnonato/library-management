@@ -24,6 +24,9 @@ import com.rtrnonato.library_management.services.exceptions.ResourceNotFoundExce
 
 import jakarta.persistence.EntityNotFoundException;
 
+/**
+ * Classe de serviço para operações relacionadas a empréstimos.
+ */
 @Service
 public class LoanService {
 
@@ -39,15 +42,37 @@ public class LoanService {
 	@Autowired
 	private LoanItemRepository loanItemRepository;
 
+	/**
+     * Recupera todos os empréstimos no sistema.
+     *
+     * @return Lista de todos os empréstimos
+     */
 	public List<Loan> findAll() {
 		return loanRepository.findAll();
 	}
 
+	/**
+     * Recupera um empréstimo pelo seu ID.
+     *
+     * @param id O ID do empréstimo a ser recuperado
+     * @return O empréstimo com o ID fornecido
+     * @throws NoSuchElementException Se nenhum empréstimo com o ID fornecido for encontrado
+     */
 	public Loan findById(Long id) {
 		Optional<Loan> obj = loanRepository.findById(id);
-		return obj.orElseThrow(() -> new NoSuchElementException("User not found with ID: " + id));
+		return obj.orElseThrow(() -> new NoSuchElementException("Loan not found with ID: " + id));
 	}
 
+	/**
+     * Cria um novo empréstimo para o usuário e livros especificados.
+     *
+     * @param bookIds Os IDs dos livros a serem emprestados
+     * @param userId  O ID do usuário que está pegando os livros emprestados
+     * @return O empréstimo criado
+     * @throws NoSuchElementException    Se o usuário ou algum dos livros especificados não forem encontrados
+     * @throws IllegalArgumentException Se algum dos livros especificados não estiver disponível para empréstimo
+     * @throws IllegalStateException    Se nenhum item de empréstimo for criado
+     */
 	public Loan createLoan(List<Long> bookIds, Long userId) {
 		User user = userRepository.findById(userId)
 				.orElseThrow(() -> new NoSuchElementException("User not found with ID: " + userId));
@@ -90,7 +115,13 @@ public class LoanService {
 			throw new IllegalStateException("No loan created");
 		}
 	}
-
+	
+	/**
+     * Retorna os empréstimos especificados, atualizando seu status e a disponibilidade dos livros.
+     *
+     * @param loanIds Os IDs dos empréstimos a serem devolvidos
+     * @throws IllegalArgumentException Se algum dos empréstimos especificados não estiver atualmente emprestado
+     */
 	public void returnBooks(List<Long> loanIds) {
 		for (Long loanId : loanIds) {
 			Loan loan = loanRepository.findById(loanId)
@@ -119,6 +150,12 @@ public class LoanService {
 		}
 	}
 	
+	/**
+     * Exclui os empréstimos especificados.
+     *
+     * @param loanIds Os IDs dos empréstimos a serem excluídos
+     * @throws ResourceNotFoundException Se algum dos empréstimos especificados não for encontrado
+     */
 	public void deleteLoan(List<Long> loanIds) {
 		try {
 			for (Long loanId : loanIds) {
@@ -133,6 +170,14 @@ public class LoanService {
 		}
 	}
 	
+	/**
+     * Atualiza o empréstimo especificado com os dados fornecidos.
+     *
+     * @param loanId O ID do empréstimo a ser atualizado
+     * @param obj    O objeto de empréstimo contendo os dados atualizados
+     * @return O empréstimo atualizado
+     * @throws ResourceNotFoundException Se o empréstimo especificado não for encontrado
+     */
 	public Loan updateLoan(Long loanId, Loan obj) {
 		try {
 		    Loan entity = loanRepository.getReferenceById(loanId);
@@ -144,6 +189,12 @@ public class LoanService {
 		}
 	}
 	
+	/**
+     * Atualiza os dados de um empréstimo existente com base nos dados fornecidos.
+     *
+     * @param entity O empréstimo existente
+     * @param obj    O empréstimo com os dados atualizados
+     */
 	private void updateData(Loan entity, Loan obj) {
 		entity.setLoan(obj.getLoan());
 		entity.setDevolution(obj.getDevolution());

@@ -18,6 +18,9 @@ import com.rtrnonato.library_management.repositories.BookRepository;
 import com.rtrnonato.library_management.repositories.UserRepository;
 import com.rtrnonato.library_management.services.exceptions.ResourceNotFoundException;
 
+/**
+ * Classe de teste para BookService.
+ */
 public class BookServiceTest {
 
 	@Mock
@@ -34,6 +37,9 @@ public class BookServiceTest {
 		MockitoAnnotations.openMocks(this);
 	}
 
+	/**
+     * Testa o método findAll para garantir que uma lista de livros seja retornada corretamente.
+     */
 	@Test
     void testFindAll() {
         List<Book> books = Collections.singletonList(new Book());
@@ -43,6 +49,9 @@ public class BookServiceTest {
         assertEquals(1, result.size());
     }
 	
+	/**
+     * Testa o método findById para garantir que um livro seja encontrado pelo ID, e uma exceção seja lançada se o livro não existir.
+     */
 	@Test
 	void testFindById() {
         Book existingBook = new Book();
@@ -53,6 +62,9 @@ public class BookServiceTest {
         assertThrows(NoSuchElementException.class, () -> bookService.findById(2L));
     }
 	
+	/**
+     * Testa o método insert para garantir que um livro seja inserido corretamente.
+     */
 	@Test
 	void testInsert() {
 		Book book = new Book();
@@ -61,6 +73,9 @@ public class BookServiceTest {
 		assertNotNull(result);
 	}
 
+	/**
+     * Testa o método delete para garantir que um livro seja excluído corretamente, e que uma exceção seja lançada se o livro não existir.
+     */
 	@Test
 	void testDelete() {
 		when(bookRepository.existsById(1L)).thenReturn(true); 
@@ -69,6 +84,9 @@ public class BookServiceTest {
 		assertThrows(ResourceNotFoundException.class, () -> bookService.delete(2L));
 	}
 
+	/**
+     * Testa o método update para garantir que um livro seja atualizado corretamente, e que uma exceção seja lançada se o livro não existir.
+     */
 	@Test
 	void testUpdate() {
 		Book existingBook = new Book();

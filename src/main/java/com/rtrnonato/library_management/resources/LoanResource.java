@@ -84,7 +84,7 @@ public class LoanResource {
      * @param loanIds Lista de IDs dos empréstimos a serem deletados.
      * @return ResponseEntity com status HTTP 200 (OK) e mensagem de sucesso, ou HTTP 404 se algum empréstimo não foi encontrado.
      */
-    @DeleteMapping("/delete")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<String> deleteLoan(@RequestBody List<Long> loanIds) {
         try {
             service.deleteLoan(loanIds);

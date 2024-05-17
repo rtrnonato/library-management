@@ -26,6 +26,9 @@ import com.rtrnonato.library_management.repositories.LoanRepository;
 import com.rtrnonato.library_management.repositories.UserRepository;
 import com.rtrnonato.library_management.services.exceptions.ResourceNotFoundException;
 
+/**
+ * Classe de teste para LoanService.
+ */
 public class LoanServiceTest {
 
 	@Mock
@@ -48,6 +51,9 @@ public class LoanServiceTest {
 		MockitoAnnotations.openMocks(this);
 	}
 	
+	/**
+     * Testa o método findAll para garantir que uma lista de empréstimos seja retornada corretamente.
+     */
 	@Test
     void testFindAll() {
         List<Loan> loans = Collections.singletonList(new Loan());
@@ -57,6 +63,9 @@ public class LoanServiceTest {
         assertEquals(1, result.size());
     }
 	
+	/**
+     * Testa o método findById para garantir que um empréstimo seja encontrado pelo ID, e uma exceção seja lançada se o empréstimo não existir.
+     */
 	@Test
 	void testFindById() {
         Loan existingLoan = new Loan();
@@ -67,6 +76,9 @@ public class LoanServiceTest {
         assertThrows(NoSuchElementException.class, () -> loanService.findById(2L));
 	}
 	
+	/**
+     * Testa o método createLoan para garantir que um empréstimo seja criado corretamente.
+     */
 	@Test
 	void testCreateLoan() {
 		User user = new User();
@@ -82,6 +94,9 @@ public class LoanServiceTest {
 		assertEquals(LoanStatus.BORROWED, loan.getLoanStatus());
 	}
 
+	/**
+     * Testa o método returnBooks para garantir que os livros sejam devolvidos corretamente.
+     */
 	@Test
 	void testReturnBooks() {
 		Loan loan = new Loan();
@@ -92,6 +107,9 @@ public class LoanServiceTest {
 		assertEquals(LoanStatus.DELIVERED, loan.getLoanStatus());
 	}
 
+	/**
+     * Testa o método deleteLoan para garantir que um empréstimo seja excluído corretamente.
+     */
 	@Test
 	void testDeleteLoan() {
 		when(loanRepository.existsById(anyLong())).thenReturn(true);
@@ -100,6 +118,9 @@ public class LoanServiceTest {
 		verify(loanRepository, times(loanIds.size())).deleteById(anyLong());
 	}
 	
+	/**
+     * Testa o método updateLoan para garantir que um empréstimo seja atualizado corretamente.
+     */
 	@Test
 	void testUpdateLoan() {
         Loan existingLoan = new Loan();

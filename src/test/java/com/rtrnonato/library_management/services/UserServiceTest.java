@@ -18,6 +18,9 @@ import com.rtrnonato.library_management.services.exceptions.ResourceNotFoundExce
 import com.rtrnonato.library_management.repositories.LoanItemRepository;
 import com.rtrnonato.library_management.repositories.LoanRepository;
 
+/**
+ * Classe de teste para UserService.
+ */
 public class UserServiceTest {
 
 	@Mock
@@ -37,6 +40,9 @@ public class UserServiceTest {
 		MockitoAnnotations.openMocks(this);
 	}
 
+	/**
+     * Testa o método findAll para garantir que uma lista de usuários seja retornada corretamente.
+     */
 	@Test
     void testFindAll() {
         List<User> Users = Collections.singletonList(new User());
@@ -46,6 +52,9 @@ public class UserServiceTest {
         assertEquals(1, result.size());
     }
 	
+	/**
+     * Testa o método findById para garantir que um usuário seja encontrado pelo ID, e uma exceção seja lançada se o usuário não existir.
+     */
 	@Test
 	void testFindById() {
         User existingUser = new User();
@@ -56,6 +65,9 @@ public class UserServiceTest {
         assertThrows(NoSuchElementException.class, () -> userService.findById(2L));
     }
 	
+	/**
+     * Testa o método insert para garantir que um usuário seja inserido corretamente.
+     */
 	@Test
 	void testInsert() {
 		User user = new User();
@@ -64,6 +76,9 @@ public class UserServiceTest {
 		assertNotNull(result);
 	}
 
+	/**
+     * Testa o método delete para garantir que um usuário seja excluído corretamente.
+     */
 	@Test
 	void testDelete() {
 		when(userRepository.existsById(1L)).thenReturn(true); 
@@ -72,6 +87,9 @@ public class UserServiceTest {
 		assertThrows(ResourceNotFoundException.class, () -> userService.delete(2L));
 	}
 
+	 /**
+     * Testa o método update para garantir que um usuário seja atualizado corretamente.
+     */
 	@Test
 	void testUpdate() {
 		User existingUser = new User();
