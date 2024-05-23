@@ -2,6 +2,8 @@ package com.rtrnonato.library_management.resources;
 
 import java.net.URI;
 import java.util.List;
+import java.util.NoSuchElementException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,9 +49,13 @@ public class LoanResource {
      */
     @GetMapping(value = "/{id}")
     public ResponseEntity<Loan> findById(@PathVariable Long id) {
-    	Loan obj = service.findById(id);
-    	return ResponseEntity.ok().body(obj);  	
-    }
+		try {
+			Loan obj = service.findById(id);
+			return ResponseEntity.ok().body(obj);
+		} catch (NoSuchElementException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+		}
+	}
     
     /**
      * Cria um novo empréstimo.

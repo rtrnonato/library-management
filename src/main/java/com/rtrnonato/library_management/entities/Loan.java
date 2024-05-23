@@ -48,7 +48,7 @@ public class Loan implements Serializable {
 	
 	// Livros emprestados
 	@ManyToMany
-	@JoinTable(name = "loan_book", joinColumns = @JoinColumn(name = "loan_id"), inverseJoinColumns = @JoinColumn(name = "book_id"))
+	@JoinTable(name = "tb_loan_book", joinColumns = @JoinColumn(name = "loan_id"), inverseJoinColumns = @JoinColumn(name = "book_id"))
     private Set<Book> book = new HashSet<>();
     
 	// Itens do empréstimo
@@ -95,16 +95,14 @@ public class Loan implements Serializable {
 		this.book = book;
 		setLoanStatus(loanStatus);
 	}
-
+	
 	public Long getId() {
 		return id;
 	}
 	
-	
 	public void setId(Long id) {
 		this.id = id;
 	}
-
 	
 	public LocalDate getLoan() {
 		return loan;
@@ -117,6 +115,7 @@ public class Loan implements Serializable {
 	public LocalDate getDevolution() {
 		return devolution;
 	}
+	
 	
 	public void setDevolution(LocalDate devolution) {
 		this.devolution = devolution;
@@ -150,7 +149,7 @@ public class Loan implements Serializable {
 	public Set<LoanItem> getItems() {
 		return items;
 	}
-	
+	@JsonIgnore
 	public void setItems(Set<LoanItem> items) {
 		this.items = items;
 	}
