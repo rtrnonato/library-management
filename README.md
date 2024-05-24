@@ -11,6 +11,16 @@ O **Library Management System** é uma aplicação para gerenciar empréstimos d
 - Listagem de livros disponíveis e emprestados
 - Relatório de empréstimos
 
+...
+
+## Documentação
+
+### Diagramas UML
+
+O diagrama UML fornecem uma visão geral da arquitetura e dos componentes do sistema.
+
+- [Domain Model](docs/uml/Domain Model.png)
+
 ## Pré-requisitos
 
 Antes de começar, você precisará ter as seguintes ferramentas instaladas:
