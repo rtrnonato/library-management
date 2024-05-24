@@ -99,11 +99,7 @@ Antes de começar, você precisará ter as seguintes ferramentas instaladas:
       "bookIds": [1]
     }
     ```
-
-## Rotas da API
-
-Para uma documentação completa das rotas da API, consulte o arquivo `swagger.yml` na pasta `docs/api`.
-
+    
 ## Contribuição
 
 Contribuições são bem-vindas! Por favor, siga os passos abaixo para contribuir:
