@@ -8,19 +8,21 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
+/**
+ * Classe que representa a chave primária composta da entidade LoanItem.
+ */
 @Embeddable
 public class LoanItemPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@ManyToOne
     @JoinColumn(name = "loan_id")
-	private Loan loan;
+	private Loan loan; // O empréstimo associado ao item
 	
 	@ManyToOne
     @JoinColumn(name = "book_id")
-	private Book book;
+	private Book book; // O livro associado ao item
 	
-    
 	public Loan getLoan() {
 		return loan;
 	}
@@ -53,5 +55,4 @@ public class LoanItemPK implements Serializable {
 		LoanItemPK other = (LoanItemPK) obj;
 		return Objects.equals(book, other.book) && Objects.equals(loan, other.loan);
 	}
-	
 }
