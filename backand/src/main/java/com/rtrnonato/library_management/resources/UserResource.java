@@ -18,11 +18,15 @@ import com.rtrnonato.library_management.entities.User;
 import com.rtrnonato.library_management.services.UserService;
 import com.rtrnonato.library_management.services.exceptions.ResourceNotFoundException;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 /**
  * Controlador REST para operações relacionadas aos usuários.
  */
 @RestController
 @RequestMapping(value = "/users")
+@Tag(name = "Users", description = "API para operações relacionadas aos usuários")
 public class UserResource {
 	
 	@Autowired
@@ -34,6 +38,7 @@ public class UserResource {
      * @return Uma lista de todos os usuários.
      */
 	@GetMapping
+	@Operation(summary = "Retorna todos os usuários", description = "Lista todos os usuários cadastrados no sistema")
 	public ResponseEntity<List<User>> findAll(){
 		List<User> list = service.findAll();
 		return ResponseEntity.ok().body(list);
@@ -46,6 +51,7 @@ public class UserResource {
      * @return O usuário encontrado.
      */
     @GetMapping(value = "/{id}")
+    @Operation(summary = "Retorna um usuário pelo ID", description = "Busca um usuário específico pelo seu ID")
     public ResponseEntity<User> findById(@PathVariable Long id) {
     	User obj = service.findById(id);
     	return ResponseEntity.ok().body(obj);
@@ -58,6 +64,7 @@ public class UserResource {
      * @return O usuário inserido com sua URI.
      */
     @PostMapping
+    @Operation(summary = "Insere um novo usuário", description = "Adiciona um novo usuário ao sistema")
     public ResponseEntity<User> insert(@RequestBody User obj) {
     	obj = service.insert(obj);
     	URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
@@ -71,6 +78,7 @@ public class UserResource {
      * @return Uma resposta vazia.
      */
     @DeleteMapping(value = "/{id}")
+    @Operation(summary = "Deleta um usuário pelo ID", description = "Remove um usuário do sistema pelo seu ID")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
 		try {
 			service.delete(id);
@@ -88,6 +96,7 @@ public class UserResource {
      * @return O usuário atualizado.
      */
     @PutMapping(value = "/{id}")
+    @Operation(summary = "Atualiza um usuário pelo ID", description = "Modifica os dados de um usuário existente")
     public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User obj) {
     	try {
             obj = service.update(id, obj);

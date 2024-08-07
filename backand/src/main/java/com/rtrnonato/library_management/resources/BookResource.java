@@ -17,11 +17,15 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.rtrnonato.library_management.entities.Book;
 import com.rtrnonato.library_management.services.BookService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 /**
  * Controlador REST para operações relacionadas aos livros.
  */
 @RestController
 @RequestMapping(value = "/books")
+@Tag(name = "Books", description = "API para operações relacionadas aos livros")
 public class BookResource {
 	
 	@Autowired
@@ -33,6 +37,7 @@ public class BookResource {
      * @return ResponseEntity contendo a lista de livros.
      */
 	@GetMapping
+	@Operation(summary = "Retorna todos os livros", description = "Lista todos os livros cadastrados na biblioteca")
 	public ResponseEntity<List<Book>> findAll(){
 		List<Book> list = service.findAll();
 		return ResponseEntity.ok().body(list);
@@ -45,6 +50,7 @@ public class BookResource {
      * @return ResponseEntity contendo o livro encontrado.
      */
     @GetMapping(value = "/{id}")
+    @Operation(summary = "Retorna um livro pelo ID", description = "Busca um livro específico pelo seu ID")
     public ResponseEntity<Book> findById(@PathVariable Long id) {
 		Book obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
@@ -57,6 +63,7 @@ public class BookResource {
      * @return ResponseEntity contendo o livro inserido, ou HTTP 500 em caso de erro interno do servidor.
      */
     @PostMapping
+    @Operation(summary = "Insere um novo livro", description = "Adiciona um novo livro ao sistema")
     public ResponseEntity<Book> insert(@RequestBody Book obj) {
     	try {
             obj = service.insert(obj);
@@ -74,6 +81,7 @@ public class BookResource {
      * @return ResponseEntity com status HTTP 204 (No Content) se deletado com sucesso, ou HTTP 500 em caso de erro interno do servidor.
      */
     @DeleteMapping(value = "/{id}")
+    @Operation(summary = "Deleta um livro pelo ID", description = "Remove um livro do sistema pelo seu ID")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
     	try {
             service.delete(id);
@@ -91,6 +99,7 @@ public class BookResource {
      * @return ResponseEntity contendo o livro atualizado, ou HTTP 404 se não for encontrado, ou HTTP 500 em caso de erro interno do servidor.
      */
     @PutMapping(value = "/{id}")
+    @Operation(summary = "Atualiza um livro pelo ID", description = "Modifica os dados de um livro existente")
     public ResponseEntity<Book> update(@PathVariable Long id, @RequestBody Book obj) {
     	try {
             obj = service.update(id, obj);
