@@ -20,11 +20,15 @@ import com.rtrnonato.library_management.entities.Loan;
 import com.rtrnonato.library_management.services.LoanService;
 import com.rtrnonato.library_management.services.exceptions.ResourceNotFoundException;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 /**
  * Controlador REST para operações relacionadas aos empréstimos.
  */
 @RestController
 @RequestMapping(value = "/loans")
+@Tag(name = "Loans", description = "Operações relacionadas aos empréstimos")
 public class LoanResource {
 	
 	@Autowired
@@ -36,6 +40,7 @@ public class LoanResource {
 	 * @return ResponseEntity contendo a lista de empréstimos.
 	 */
 	@GetMapping
+	@Operation(summary = "Retorna todos os empréstimos")
 	public ResponseEntity<List<Loan>> findAll(){
 		List<Loan> list = service.findAll();
 		return ResponseEntity.ok().body(list);
@@ -48,6 +53,7 @@ public class LoanResource {
      * @return ResponseEntity contendo o empréstimo encontrado.
      */
     @GetMapping(value = "/{id}")
+    @Operation(summary = "Retorna um empréstimo pelo ID")
     public ResponseEntity<Loan> findById(@PathVariable Long id) {
 		try {
 			Loan obj = service.findById(id);
@@ -64,6 +70,7 @@ public class LoanResource {
      * @return ResponseEntity contendo o novo empréstimo criado.
      */
     @PostMapping
+    @Operation(summary = "Cria um novo empréstimo", description = "Adiciona um novo empréstimo ao sistema")
     public ResponseEntity<Loan> createLoan(@RequestBody CreateLoanRequest request) {
 		List<Long> bookIds = request.getBookIds();
 		Long userId = request.getUserId();
@@ -79,6 +86,7 @@ public class LoanResource {
      * @return ResponseEntity com status HTTP 200 (OK) se os livros foram retornados com sucesso.
      */
     @PostMapping(value = "/return")
+    @Operation(summary = "Retorna os livros de um ou mais empréstimos", description = "Marca os livros como retornados")
     public ResponseEntity<Void> returnBooks(@RequestBody List<Long> loanIds) {
         service.returnBooks(loanIds);
         return ResponseEntity.ok().build();
@@ -91,6 +99,7 @@ public class LoanResource {
      * @return ResponseEntity com status HTTP 200 (OK) e mensagem de sucesso, ou HTTP 404 se algum empréstimo não foi encontrado.
      */
     @DeleteMapping(value = "/{id}")
+    @Operation(summary = "Deleta um ou mais empréstimos", description = "Remove os empréstimos do sistema")
     public ResponseEntity<String> deleteLoan(@RequestBody List<Long> loanIds) {
         try {
             service.deleteLoan(loanIds);
@@ -108,6 +117,7 @@ public class LoanResource {
      * @return ResponseEntity contendo o empréstimo atualizado, ou HTTP 404 se o empréstimo não foi encontrado.
      */
     @PutMapping("/update/{loanId}")
+    @Operation(summary = "Atualiza um empréstimo", description = "Modifica os dados de um empréstimo existente")
     public ResponseEntity<Loan> updateLoan(@PathVariable Long loanId, @RequestBody Loan loan) {
         try {
             Loan updatedLoan = service.updateLoan(loanId, loan);
