@@ -96,4 +96,8 @@ public class UserService {
 		entity.setName(obj.getName());
 		entity.setEmail(obj.getEmail());
 	}
+	
+	public long countUsers() {
+        return repository.count();
+    }
 }

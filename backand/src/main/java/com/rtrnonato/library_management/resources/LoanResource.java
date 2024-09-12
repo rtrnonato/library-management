@@ -126,4 +126,10 @@ public class LoanResource {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+    
+    @GetMapping("/count")
+    public ResponseEntity<Long> countLoans() {
+        long count = service.countLoans();
+        return ResponseEntity.ok().body(count);
+    }
 }

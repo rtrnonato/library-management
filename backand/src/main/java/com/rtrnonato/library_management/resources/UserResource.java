@@ -104,5 +104,11 @@ public class UserResource {
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
-    } 
+    }
+    
+    @GetMapping("/count")
+    public ResponseEntity<Long> countUsers() {
+        long count = service.countUsers();
+        return ResponseEntity.ok().body(count);
+    }
 }

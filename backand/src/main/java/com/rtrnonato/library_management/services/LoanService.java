@@ -203,4 +203,8 @@ public class LoanService {
 		entity.setItems(obj.getItems());
 		entity.setLoanStatus(obj.getLoanStatus());
 	}
+	
+	public long countLoans() {
+        return loanRepository.count();
+    }
 }

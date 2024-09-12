@@ -111,4 +111,10 @@ public class BookResource {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+    
+    @GetMapping("/count")
+    public ResponseEntity<Long> countBooks() {
+        long count = service.countBooks();
+        return ResponseEntity.ok().body(count);
+    }
 }
