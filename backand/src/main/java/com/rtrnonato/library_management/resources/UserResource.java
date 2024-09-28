@@ -19,6 +19,8 @@ import com.rtrnonato.library_management.services.UserService;
 import com.rtrnonato.library_management.services.exceptions.ResourceNotFoundException;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
@@ -39,6 +41,9 @@ public class UserResource {
      */
 	@GetMapping
 	@Operation(summary = "Retorna todos os usuários", description = "Lista todos os usuários cadastrados no sistema")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Lista de usuários encontrada")
+		})
 	public ResponseEntity<List<User>> findAll(){
 		List<User> list = service.findAll();
 		return ResponseEntity.ok().body(list);
@@ -52,6 +57,10 @@ public class UserResource {
      */
     @GetMapping(value = "/{id}")
     @Operation(summary = "Retorna um usuário pelo ID", description = "Busca um usuário específico pelo seu ID")
+    @ApiResponses(value = {
+    		@ApiResponse(responseCode = "200", description = "Usuário encontrado"),
+    		@ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    	})
     public ResponseEntity<User> findById(@PathVariable Long id) {
     	User obj = service.findById(id);
     	return ResponseEntity.ok().body(obj);
@@ -65,6 +74,10 @@ public class UserResource {
      */
     @PostMapping
     @Operation(summary = "Insere um novo usuário", description = "Adiciona um novo usuário ao sistema")
+    @ApiResponses(value = {
+    		@ApiResponse(responseCode = "201", description = "Usuário criado com sucesso"),
+    		@ApiResponse(responseCode = "400", description = "Requisição inválida")
+    	})
     public ResponseEntity<User> insert(@RequestBody User obj) {
     	obj = service.insert(obj);
     	URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
@@ -79,6 +92,10 @@ public class UserResource {
      */
     @DeleteMapping(value = "/{id}")
     @Operation(summary = "Deleta um usuário pelo ID", description = "Remove um usuário do sistema pelo seu ID")
+    @ApiResponses(value = {
+    		@ApiResponse(responseCode = "204", description = "Usuário deletado com sucesso"),
+    		@ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    	})
     public ResponseEntity<Void> delete(@PathVariable Long id) {
 		try {
 			service.delete(id);
@@ -97,6 +114,10 @@ public class UserResource {
      */
     @PutMapping(value = "/{id}")
     @Operation(summary = "Atualiza um usuário pelo ID", description = "Modifica os dados de um usuário existente")
+    @ApiResponses(value = {
+    		@ApiResponse(responseCode = "200", description = "Usuário atualizado com sucesso"),
+    		@ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    	})
     public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User obj) {
     	try {
             obj = service.update(id, obj);
@@ -107,6 +128,10 @@ public class UserResource {
     }
     
     @GetMapping("/count")
+    @Operation(summary = "Contagem de usuários", description = "Retorna o número total de usuários")
+    @ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Contagem realizada com sucesso")
+	})
     public ResponseEntity<Long> countUsers() {
         long count = service.countUsers();
         return ResponseEntity.ok().body(count);
