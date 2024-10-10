@@ -34,7 +34,7 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+       /*
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/", "/home", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated()
@@ -44,9 +44,13 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/admin", true)
                 .permitAll()
             )
-            .logout(logout -> logout.permitAll());
+            .logout(logout -> logout.permitAll());*/
 
-        return http.build();
+        http
+				.csrf(csrfCustomizer -> csrfCustomizer.disable()) // Desabilita CSRF
+				.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll()); // Permite todas as requisições
+
+    return http.build();
     }
 
     /**
@@ -59,7 +63,7 @@ public class SecurityConfig {
      * 
      * @return O serviço de detalhes do usuário.
      */
-    @Bean
+   /* @Bean
     public UserDetailsService userDetailsService() {
         UserDetails user = User.withUsername("user")
             .password(passwordEncoder().encode("password"))
@@ -82,8 +86,8 @@ public class SecurityConfig {
      * 
      * @return O codificador de senhas.
      */
-    @Bean
+   /* @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
+    }*/
 }

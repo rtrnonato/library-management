@@ -43,7 +43,7 @@ public class Loan implements Serializable {
 
 	// Usuário que realizou o empréstimo
 	@ManyToOne
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 	
 	// Livros emprestados
