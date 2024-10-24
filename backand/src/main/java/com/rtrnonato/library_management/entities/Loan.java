@@ -8,6 +8,8 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rtrnonato.library_management.entities.enums.LoanStatus;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -45,14 +47,9 @@ public class Loan implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
-	
-	// Livros emprestados
-	@ManyToMany
-	@JoinTable(name = "tb_loan_book", joinColumns = @JoinColumn(name = "loan_id"), inverseJoinColumns = @JoinColumn(name = "book_id"))
-    private Set<Book> book = new HashSet<>();
     
 	// Itens do empréstimo
-	@OneToMany(mappedBy = "loan")
+	@OneToMany(mappedBy = "loan", cascade = CascadeType.ALL)
 	private Set<LoanItem> items = new HashSet<>();
 	
 	// Status do empréstimo
@@ -72,7 +69,6 @@ public class Loan implements Serializable {
      * @param devolution Data de devolução
      * @param user Usuário que realizou o empréstimo
      * @param loanStatus Status do empréstimo
-     * @param book Livros emprestados
      * @throws IllegalArgumentException Se a data do empréstimo for nula, se o usuário for nulo
      *                                  ou se nenhum livro for fornecido
      */
@@ -84,15 +80,11 @@ public class Loan implements Serializable {
 		if (user == null) {
 			throw new IllegalArgumentException("User cannot be null");
 		}
-		if (book == null || book.isEmpty()) {
-            throw new IllegalArgumentException("At least one book must be provided");
-        }
 		
 		this.id = id;
 		this.loan = loan;
 		this.devolution = devolution;
 		this.user = user;
-		this.book = book;
 		setLoanStatus(loanStatus);
 	}
 	
@@ -128,14 +120,6 @@ public class Loan implements Serializable {
 	
 	public void setUser(User user) {
 		this.user = user;
-	}
-	
-	public Set<Book> getBook() {
-		return book;
-	}
-	
-	public void setBook(Set<Book> book) {
-		this.book = book;
 	}
 	
 	public LoanStatus getLoanStatus() {

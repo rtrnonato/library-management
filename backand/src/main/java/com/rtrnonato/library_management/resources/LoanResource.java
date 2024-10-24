@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.rtrnonato.library_management.entities.Loan;
 import com.rtrnonato.library_management.requests.CreateLoanRequest;
+import com.rtrnonato.library_management.requests.UpdateLoanRequest;
 import com.rtrnonato.library_management.services.LoanService;
 import com.rtrnonato.library_management.services.exceptions.ResourceNotFoundException;
 
@@ -146,9 +147,9 @@ public class LoanResource {
     		@ApiResponse(responseCode = "200", description = "Empréstimo atualizado com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Loan.class))),
     		@ApiResponse(responseCode = "404", description = "Empréstimo não encontrado")
     	})
-    public ResponseEntity<Loan> updateLoan(@PathVariable Long loanId, @RequestBody Loan loan) {
+    public ResponseEntity<Loan> updateLoan(@PathVariable Long loanId, @RequestBody UpdateLoanRequest loanData) {
         try {
-            Loan updatedLoan = service.updateLoan(loanId, loan);
+            Loan updatedLoan = service.updateLoan(loanId, loanData);
             return ResponseEntity.ok(updatedLoan);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

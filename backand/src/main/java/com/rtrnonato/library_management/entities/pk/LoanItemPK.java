@@ -16,11 +16,11 @@ public class LoanItemPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@ManyToOne
-    @JoinColumn(name = "loan_id")
+    @JoinColumn(name = "loan_id", nullable = false)
 	private Loan loan; // O empréstimo associado ao item
 	
 	@ManyToOne
-    @JoinColumn(name = "book_id")
+    @JoinColumn(name = "book_id", nullable = false)
 	private Book book; // O livro associado ao item
 	
 	public Loan getLoan() {
