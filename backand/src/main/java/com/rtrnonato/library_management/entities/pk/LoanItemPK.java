@@ -15,13 +15,15 @@ import jakarta.persistence.ManyToOne;
 public class LoanItemPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
+	// O empréstimo associado ao item
 	@ManyToOne
     @JoinColumn(name = "loan_id", nullable = false)
-	private Loan loan; // O empréstimo associado ao item
+	private Loan loan; 
 	
+	// O livro associado ao item
 	@ManyToOne
     @JoinColumn(name = "book_id", nullable = false)
-	private Book book; // O livro associado ao item
+	private Book book; 
 	
 	public Loan getLoan() {
 		return loan;

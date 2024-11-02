@@ -2,17 +2,34 @@ package com.rtrnonato.library_management.requests;
 
 import java.time.LocalDate;
 
+/**
+ * Classe que representa a requisição para atualização de um empréstimo.
+ * 
+ * Esta classe contém os dados necessários para atualizar as informações de um
+ * empréstimo existente, incluindo as datas de empréstimo e devolução, o status
+ * do empréstimo e o ID do usuário associado.
+ */
 public class UpdateLoanRequest {
 
-	private LocalDate loan;
-    private LocalDate devolution;
-    private String loanStatus;
-    private Long userId;
+	private LocalDate loan; // Data do empréstimo
+    private LocalDate devolution; // Data de devolução prevista
+    private String loanStatus; // Status atual do empréstimo
+    private Long userId; // ID do usuário associado ao empréstimo
     
+    /**
+     * Construtor padrão.
+     */
     public  UpdateLoanRequest() {
 	}
-
     
+    /**
+     * Construtor que inicializa todos os campos com os valores fornecidos.
+     * 
+     * @param loan Data do empréstimo.
+     * @param devolution Data prevista de devolução.
+     * @param loanStatus Status atual do empréstimo.
+     * @param userId ID do usuário associado ao empréstimo.
+     */
 	public UpdateLoanRequest(LocalDate loan, LocalDate devolution, String loanStatus, Long userId) {
 		super();
 		this.loan = loan;
@@ -59,9 +76,5 @@ public class UpdateLoanRequest {
 
 	public void setUserId(Long userId) {
 		this.userId = userId;
-	}
-	
-	
-    
-    
+	}   
 }

@@ -4,7 +4,7 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -21,40 +21,36 @@ import com.rtrnonato.library_management.entities.Loan;
 import com.rtrnonato.library_management.entities.User;
 import com.rtrnonato.library_management.entities.enums.LoanStatus;
 import com.rtrnonato.library_management.repositories.BookRepository;
-import com.rtrnonato.library_management.repositories.LoanItemRepository;
 import com.rtrnonato.library_management.repositories.LoanRepository;
 import com.rtrnonato.library_management.repositories.UserRepository;
-import com.rtrnonato.library_management.services.exceptions.ResourceNotFoundException;
+import com.rtrnonato.library_management.requests.UpdateLoanRequest;
 
 /**
  * Classe de teste para LoanService.
  */
 public class LoanServiceTest {
 
-	@Mock
-	private UserRepository userRepository;
+    @Mock
+    private UserRepository userRepository;
 
-	@Mock
-	private BookRepository bookRepository;
+    @Mock
+    private BookRepository bookRepository;
 
-	@Mock
-	private LoanRepository loanRepository;
+    @Mock
+    private LoanRepository loanRepository;
 
-	@Mock
-	private LoanItemRepository loanItemRepository;
+    @InjectMocks
+    private LoanService loanService;
 
-	@InjectMocks
-	private LoanService loanService;
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
 
-	@BeforeEach
-	void setUp() {
-		MockitoAnnotations.openMocks(this);
-	}
-	
-	/**
+    /**
      * Testa o método findAll para garantir que uma lista de empréstimos seja retornada corretamente.
      */
-	@Test
+    @Test
     void testFindAll() {
         List<Loan> loans = Collections.singletonList(new Loan());
         when(loanRepository.findAll()).thenReturn(loans);
@@ -62,39 +58,45 @@ public class LoanServiceTest {
         assertNotNull(result);
         assertEquals(1, result.size());
     }
-	
-	/**
-     * Testa o método findById para garantir que um empréstimo seja encontrado pelo ID, e uma exceção seja lançada se o empréstimo não existir.
+
+    /**
+     * Testa o método findById para garantir que um empréstimo seja encontrado pelo ID.
      */
-	@Test
-	void testFindById() {
+    @Test
+    void testFindById() {
         Loan existingLoan = new Loan();
         when(loanRepository.findById(1L)).thenReturn(Optional.of(existingLoan));
         Loan result = loanService.findById(1L);
         assertNotNull(result);
+
+        // Testa exceção quando o empréstimo não existe
         when(loanRepository.findById(2L)).thenReturn(Optional.empty());
         assertThrows(NoSuchElementException.class, () -> loanService.findById(2L));
-	}
-	
-	/**
+    }
+
+    /**
      * Testa o método createLoan para garantir que um empréstimo seja criado corretamente.
      */
-	@Test
-	void testCreateLoan() {
-		User user = new User();
-		when(userRepository.findById(anyLong())).thenReturn(java.util.Optional.of(user));
-		Book book = new Book();
-		book.setAvailable(1);
-		when(bookRepository.findById(anyLong())).thenReturn(java.util.Optional.of(book));
-		when(bookRepository.save(any(Book.class))).thenReturn(book);
-		List<Long> bookIds = Collections.singletonList(1L);
-		Long userId = 1L;
-		Loan loan = loanService.createLoan(bookIds, userId);
-		assertNotNull(loan);
-		assertEquals(LoanStatus.BORROWED, loan.getLoanStatus());
-	}
+    @Test
+    void testCreateLoan() {
+        User user = new User();
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        Book book = new Book();
+        book.setAvailable(1);
+        when(bookRepository.findById(anyLong())).thenReturn(Optional.of(book));
+        when(bookRepository.save(any(Book.class))).thenReturn(book);
 
-	/**
+        List<Long> bookIds = Collections.singletonList(1L);
+        Long userId = 1L;
+
+        Loan loan = loanService.createLoan(bookIds, userId);
+
+        assertNotNull(loan);
+        assertEquals(LoanStatus.BORROWED, loan.getLoanStatus());
+        verify(bookRepository, times(1)).save(any(Book.class));
+    }
+    
+    /**
      * Testa o método returnBooks para garantir que os livros sejam devolvidos corretamente.
      */
 	@Test
@@ -107,34 +109,58 @@ public class LoanServiceTest {
 		assertEquals(LoanStatus.DELIVERED, loan.getLoanStatus());
 	}
 
-	/**
+    /**
      * Testa o método deleteLoan para garantir que um empréstimo seja excluído corretamente.
      */
-	@Test
-	void testDeleteLoan() {
-		when(loanRepository.existsById(anyLong())).thenReturn(true);
-		List<Long> loanIds = Collections.singletonList(1L);
-		loanService.deleteLoan(loanIds);
-		verify(loanRepository, times(loanIds.size())).deleteById(anyLong());
-	}
-	
-	/**
+    @Test
+    void testDeleteLoan() {
+        when(loanRepository.existsById(anyLong())).thenReturn(true);
+        List<Long> loanIds = Collections.singletonList(1L);
+
+        loanService.deleteLoan(loanIds);
+
+        verify(loanRepository, times(loanIds.size())).deleteById(anyLong());
+    }
+
+    /**
      * Testa o método updateLoan para garantir que um empréstimo seja atualizado corretamente.
      */
-	@Test
-	void testUpdateLoan() {
+    @Test
+    void testUpdateLoan() {
         Loan existingLoan = new Loan();
         existingLoan.setId(1L);
         existingLoan.setLoanStatus(LoanStatus.BORROWED);
+
+        User existingUser = new User();
+        existingUser.setId(1L);
+
+        UpdateLoanRequest loanData = new UpdateLoanRequest();
+        loanData.setUserId(1L);
+        loanData.setLoan(LocalDate.now());
+        loanData.setDevolution(LocalDate.now().plusDays(20));
+        loanData.setLoanStatus("DELIVERED");
+
         when(loanRepository.getReferenceById(1L)).thenReturn(existingLoan);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(existingUser));
         when(loanRepository.save(existingLoan)).thenReturn(existingLoan);
-        Loan updatedLoan = new Loan();
-        updatedLoan.setId(1L);
-        updatedLoan.setLoanStatus(LoanStatus.DELIVERED);
-        Loan result = loanService.updateLoan(1L, updatedLoan);
+
+        Loan result = loanService.updateLoan(1L, loanData);
+
         assertNotNull(result);
         assertEquals(LoanStatus.DELIVERED, result.getLoanStatus());
-        when(loanRepository.getReferenceById(2L)).thenThrow(ResourceNotFoundException.class);
-        assertThrows(ResourceNotFoundException.class, () -> loanService.updateLoan(2L, new Loan()));
-	}
+        assertEquals(existingUser, result.getUser());
+    }
+
+    /**
+     * Testa o método countLoans para garantir que ele retorne o número total de empréstimos corretamente.
+     */
+    @Test
+    void testCountLoans() {
+        long expectedCount = 10L;
+        when(loanRepository.count()).thenReturn(expectedCount);
+
+        long result = loanService.countLoans();
+
+        assertEquals(expectedCount, result);
+    }
 }

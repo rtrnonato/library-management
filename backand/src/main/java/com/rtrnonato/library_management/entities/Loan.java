@@ -8,20 +8,15 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rtrnonato.library_management.entities.enums.LoanStatus;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 /**
  * Representa um emprestimo de livro.
@@ -69,8 +64,8 @@ public class Loan implements Serializable {
      * @param devolution Data de devolução
      * @param user Usuário que realizou o empréstimo
      * @param loanStatus Status do empréstimo
-     * @throws IllegalArgumentException Se a data do empréstimo for nula, se o usuário for nulo
-     *                                  ou se nenhum livro for fornecido
+     * @throws IllegalArgumentException Se a data do empréstimo for nula ou se o usuário for nulo
+     *                                 
      */
 	public Loan(Long id, LocalDate loan, LocalDate devolution, User user, LoanStatus loanStatus, Set<Book> book) {
 		// Verificações para garantir que parâmetros essenciais não sejam nulos
@@ -107,7 +102,6 @@ public class Loan implements Serializable {
 	public LocalDate getDevolution() {
 		return devolution;
 	}
-	
 	
 	public void setDevolution(LocalDate devolution) {
 		this.devolution = devolution;

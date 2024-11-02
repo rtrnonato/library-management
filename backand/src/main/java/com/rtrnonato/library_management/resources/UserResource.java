@@ -127,6 +127,11 @@ public class UserResource {
         }
     }
     
+    /**
+     * Retorna a contagem total de usuários.
+     *
+     * @return ResponseEntity contendo a contagem total de usuários.
+     */
     @GetMapping("/count")
     @Operation(summary = "Contagem de usuários", description = "Retorna o número total de usuários")
     @ApiResponses(value = {

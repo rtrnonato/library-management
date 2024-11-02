@@ -3,7 +3,6 @@ package com.rtrnonato.library_management.resources;
 import java.net.URI;
 import java.util.List;
 import java.util.NoSuchElementException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,6 @@ import com.rtrnonato.library_management.requests.CreateLoanRequest;
 import com.rtrnonato.library_management.requests.UpdateLoanRequest;
 import com.rtrnonato.library_management.services.LoanService;
 import com.rtrnonato.library_management.services.exceptions.ResourceNotFoundException;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -138,7 +136,7 @@ public class LoanResource {
      * Atualiza um empréstimo.
      *
      * @param loanId ID do empréstimo a ser atualizado.
-     * @param loan   Novos dados do empréstimo.
+     * @param loanData Novos dados do empréstimo.
      * @return ResponseEntity contendo o empréstimo atualizado, ou HTTP 404 se o empréstimo não foi encontrado.
      */
     @PutMapping("/update/{loanId}")
@@ -156,6 +154,11 @@ public class LoanResource {
         }
     }
     
+    /**
+     * Retorna a contagem total de empréstimos.
+     *
+     * @return ResponseEntity contendo a contagem total de livros.
+     */
     @GetMapping("/count")
 	@Operation(summary = "Contagem de empréstimos", description = "Retorna o número total de empréstimos")
 	@ApiResponses(value = {
