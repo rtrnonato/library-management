@@ -5,17 +5,11 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -41,7 +35,7 @@ public class Book implements Serializable {
     private String gender;
 
     // Data de publicação do livro
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "GMT")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate publication;
 
     // Número ISBN do livro
@@ -53,13 +47,8 @@ public class Book implements Serializable {
     // Número de exemplares disponíveis do livro
     private Integer available;
     
-    // Conjunto de empréstimos associados ao livro
-	@ManyToMany
-	private Set<Loan> loan = new HashSet<>();
-	
 	// Conjunto de itens de empréstimo associados ao livro
-	@OneToMany(mappedBy = "bookItem")
-	@Fetch(FetchMode.JOIN)
+	@OneToMany(mappedBy = "book")
 	private Set<LoanItem> items = new HashSet<>();
 
 	/**
@@ -147,7 +136,7 @@ public class Book implements Serializable {
 		if (iSBN == null) {
 	        throw new IllegalArgumentException("ISBN cannot be null");
 		}
-		if (ISBN < 0) {
+		if (iSBN < 0) {
 	        throw new IllegalArgumentException("ISBN cannot be negative");
 	    }
 		this.ISBN = iSBN;
@@ -171,15 +160,7 @@ public class Book implements Serializable {
 	public void setAvailable(Integer available) {
 		this.available = available;
 	}
-
-	public Set<Loan> getLoan() {
-		return loan;
-	}
-
-	public void setLoan(Set<Loan> loan) {
-		this.loan = loan;
-	}
-	
+		
 	/**
      * Obtém o conjunto de empréstimos associados ao livro.
      * 

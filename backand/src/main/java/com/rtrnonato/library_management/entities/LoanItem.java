@@ -2,18 +2,14 @@ package com.rtrnonato.library_management.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.rtrnonato.library_management.entities.pk.LoanItemPK;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 
 /**
@@ -30,25 +26,19 @@ public class LoanItem implements Serializable {
 	
 	// Empréstimo associado a este item de empréstimo.
 	@ManyToOne
-	@JoinColumn(name = "loan_item_id")
+	@MapsId("loan")
+	@JoinColumn(name = "loan_id")
 	private Loan loan;
 	
 	// Livro associado a este item de empréstimo.
 	@ManyToOne
-	@JoinColumn(name = "book_item_id")
-	private Book bookItem;
-	
-	// Conjunto de itens de empréstimo associados a este item.
-	@OneToMany(fetch = FetchType.EAGER)
-    private Set<LoanItem> items = new HashSet<>();
+	@MapsId("book")
+	@JoinColumn(name = "book_id")
+	private Book book;
 	
 	// Data de retorno esperada do livro associado a este item.
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "GMT")
 	private LocalDate expectedReturn;
-	
-	// Data de retorno real do livro associado a este item.
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "GMT")
-	private LocalDate actualReturn;
 	
 	/**
      * Construtor padrão.
@@ -62,10 +52,9 @@ public class LoanItem implements Serializable {
      * @param book O livro associado a este item de empréstimo.
      * @param loan O empréstimo associado a este item de empréstimo.
      * @param expectedReturn A data de retorno esperada do livro.
-     * @param actualReturn A data de retorno real do livro.
      * @throws IllegalArgumentException Se algum dos parâmetros for nulo.
      */
-	public LoanItem(Book book, Loan loan, LocalDate expectedReturn, LocalDate actualReturn) {
+	public LoanItem(Book book, Loan loan, LocalDate expectedReturn) {
 		if (book == null) {
 	        throw new IllegalArgumentException("Book cannot be null");
 	    }
@@ -73,20 +62,19 @@ public class LoanItem implements Serializable {
 	        throw new IllegalArgumentException("Loan cannot be null");
 	    }
 	    
-		id.setBook(book);
-		id.setLoan(loan);
+		this.id.setBook(book);
+		this.id.setLoan(loan);
 		this.expectedReturn = expectedReturn;
-		this.actualReturn = actualReturn;
 	}
 	
 	public Book getBook() {
-		return id.getBook();
+		return book;
 	}
-	 
+
 	public void setBook(Book book) {
-		id.setBook(book);
+		this.book = book;
 	}
-	
+
 	public Loan getLoan() {
 		return id.getLoan();
 	}
@@ -109,14 +97,6 @@ public class LoanItem implements Serializable {
 
 	public void setExpectedReturn(LocalDate expectedReturn) {
 		this.expectedReturn = expectedReturn;
-	}
-
-	public LocalDate getActualReturn() {
-		return actualReturn;
-	}
-
-	public void setActualReturn(LocalDate actualReturn) {
-		this.actualReturn = actualReturn;
 	}
 
 	@Override

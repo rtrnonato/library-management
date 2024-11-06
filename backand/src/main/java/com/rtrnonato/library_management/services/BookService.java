@@ -100,4 +100,9 @@ public class BookService {
 	    }
 		entity.setAvailable(obj.getAvailable());
 	}
+	
+	
+	public long countBooks() {
+        return repository.count();
+    }
 }

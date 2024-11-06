@@ -1,15 +1,15 @@
 package com.rtrnonato.library_management.services;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import com.rtrnonato.library_management.entities.Book;
 import com.rtrnonato.library_management.entities.Loan;
@@ -17,11 +17,14 @@ import com.rtrnonato.library_management.entities.LoanItem;
 import com.rtrnonato.library_management.entities.User;
 import com.rtrnonato.library_management.entities.enums.LoanStatus;
 import com.rtrnonato.library_management.repositories.BookRepository;
-import com.rtrnonato.library_management.repositories.LoanItemRepository;
 import com.rtrnonato.library_management.repositories.LoanRepository;
 import com.rtrnonato.library_management.repositories.UserRepository;
+import com.rtrnonato.library_management.requests.UpdateLoanRequest;
 import com.rtrnonato.library_management.services.exceptions.ResourceNotFoundException;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.persistence.EntityNotFoundException;
 
 /**
@@ -38,9 +41,6 @@ public class LoanService {
 
 	@Autowired
 	private UserRepository userRepository;
-
-	@Autowired
-	private LoanItemRepository loanItemRepository;
 
 	/**
      * Recupera todos os empréstimos no sistema.
@@ -71,49 +71,34 @@ public class LoanService {
      * @return O empréstimo criado
      * @throws NoSuchElementException    Se o usuário ou algum dos livros especificados não forem encontrados
      * @throws IllegalArgumentException Se algum dos livros especificados não estiver disponível para empréstimo
-     * @throws IllegalStateException    Se nenhum item de empréstimo for criado
      */
+	@Transactional
 	public Loan createLoan(List<Long> bookIds, Long userId) {
-		User user = userRepository.findById(userId)
-				.orElseThrow(() -> new NoSuchElementException("User not found with ID: " + userId));
+	    User user = userRepository.findById(userId)
+	            .orElseThrow(() -> new NoSuchElementException("User not found with ID: " + userId));
 
-		Loan loan = new Loan();
-		loan.setUser(user);
-		loan.setLoan(LocalDate.now());
-		loan.setLoanStatus(LoanStatus.BORROWED);
-		Set<LoanItem> loanItems = new HashSet<>();
-		Set<Book> books = new HashSet<>();
-		for (Long bookId : bookIds) {
-			Book book = bookRepository.findById(bookId)
-					.orElseThrow(() -> new NoSuchElementException("Book not found with ID: " + bookId));
+	    Loan loan = new Loan();
+	    loan.setUser(user);  
+	    loan.setLoan(LocalDate.now()); 
+	    loan.setLoanStatus(LoanStatus.BORROWED);
 
-			if (book.getAvailable() <= 0) {
-				throw new IllegalArgumentException("Book with ID " + bookId + " is not available for loan.");
-			}
+	    for (Long bookId : bookIds) {
+	        Book book = bookRepository.findById(bookId)
+	                .orElseThrow(() -> new NoSuchElementException("Book not found with ID: " + bookId));
 
-			book.decrementAvailable();
-			bookRepository.save(book);
-			books.add(book);
+	        if (book.getAvailable() <= 0) {
+	            throw new IllegalArgumentException("Book with ID " + bookId + " is not available for loan.");
+	        }
 
-			loan.setBook(books);
-			loanRepository.save(loan);
+	        book.decrementAvailable();
+	        bookRepository.save(book); 
+        
+	        LoanItem loanItem = new LoanItem(book, loan, LocalDate.now().plusDays(60));
+	        loan.getItems().add(loanItem);
+	    }
 
-			LoanItem loanItem = new LoanItem();
-			loanItem.setBook(book);
-			loanItem.setLoan(loan);
-			loanItem.setExpectedReturn(LocalDate.now().plusDays(30));
-
-			loanItems.add(loanItem);
-			loanItemRepository.save(loanItem);
-		}
-
-		loan.setItems(loanItems);
-
-		if (!loanItems.isEmpty()) {
-			return loan;
-		} else {
-			throw new IllegalStateException("No loan created");
-		}
+	    loanRepository.save(loan);
+	    return loan;
 	}
 	
 	/**
@@ -122,6 +107,7 @@ public class LoanService {
      * @param loanIds Os IDs dos empréstimos a serem devolvidos
      * @throws IllegalArgumentException Se algum dos empréstimos especificados não estiver atualmente emprestado
      */
+	@Transactional
 	public void returnBooks(List<Long> loanIds) {
 		for (Long loanId : loanIds) {
 			Loan loan = loanRepository.findById(loanId)
@@ -132,21 +118,26 @@ public class LoanService {
 			}
 
 			loan.setLoanStatus(LoanStatus.DELIVERED);
-
-			System.out.println("the loan" + loanId + "status is now DELIVERED");
-
 			loan.setDevolution(LocalDate.now());
+
+			System.out.println("The loan " + loanId + " status is now DELIVERED");
 
 			for (LoanItem loanItem : loan.getItems()) {
 				Book book = loanItem.getBook();
-				book.incrementAvailable();
-				loanItem.setActualReturn(LocalDate.now());
-				bookRepository.save(book);
+				
+				if (book != null) {
+					book.incrementAvailable();
+					bookRepository.save(book);
+					System.out.println("Book " + book.getId() + " incremented successfully. New available count: "
+							+ book.getAvailable());
+				} else {
+					throw new NoSuchElementException("Book is null for LoanItem with ID: " + loanItem.getId());
+				}
+				
 			}
 
 			loanRepository.save(loan);
-			
-			System.out.println(loan.getLoanStatus());
+			System.out.println("Loan status after save: " + loan.getLoanStatus());
 		}
 	}
 	
@@ -174,14 +165,21 @@ public class LoanService {
      * Atualiza o empréstimo especificado com os dados fornecidos.
      *
      * @param loanId O ID do empréstimo a ser atualizado
-     * @param obj    O objeto de empréstimo contendo os dados atualizados
+     * @param loanData O objeto de empréstimo contendo os dados atualizados
      * @return O empréstimo atualizado
      * @throws ResourceNotFoundException Se o empréstimo especificado não for encontrado
      */
-	public Loan updateLoan(Long loanId, Loan obj) {
+	public Loan updateLoan(Long loanId, UpdateLoanRequest loanData) {
 		try {
 		    Loan entity = loanRepository.getReferenceById(loanId);
-		    updateData(entity, obj);
+			User user = userRepository.findById(loanData.getUserId()).orElseThrow(
+					() -> new ResourceNotFoundException("User not found with ID: " + loanData.getUserId()));
+			
+			entity.setLoan(loanData.getLoan());
+			entity.setDevolution(loanData.getDevolution());
+			entity.setUser(user);
+			entity.setLoanStatus(LoanStatus.valueOf(loanData.getLoanStatus()));
+
 		    return loanRepository.save(entity);
 		} catch(EntityNotFoundException e) {
 			e.printStackTrace();
@@ -189,18 +187,17 @@ public class LoanService {
 		}
 	}
 	
-	/**
-     * Atualiza os dados de um empréstimo existente com base nos dados fornecidos.
+	 /**
+     * Retorna a contagem total de empréstimos.
      *
-     * @param entity O empréstimo existente
-     * @param obj    O empréstimo com os dados atualizados
+     * @return ResponseEntity contendo a contagem total de empréstimos.
      */
-	private void updateData(Loan entity, Loan obj) {
-		entity.setLoan(obj.getLoan());
-		entity.setDevolution(obj.getDevolution());
-		entity.setUser(obj.getUser());
-		entity.setBook(obj.getBook());
-		entity.setItems(obj.getItems());
-		entity.setLoanStatus(obj.getLoanStatus());
-	}
+    @GetMapping("/count")
+    @Operation(summary = "Contagem de empréstimos", description = "Retorna o número total de empréstimos")
+    @ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Contagem realizada com sucesso")
+	})
+	public long countLoans() {
+        return loanRepository.count();
+    }
 }

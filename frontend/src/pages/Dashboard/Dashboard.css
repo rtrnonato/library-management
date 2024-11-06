@@ -1,0 +1,49 @@
+.dashboard-container {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .dashboard-overview {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+  }
+  
+  .dashboard-item {
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 8px;
+    width: 250px;
+  }
+  
+  .dashboard-item h2 {
+    margin-bottom: 10px;
+  }
+  
+  .dashboard-link {
+    display: inline-block;
+    margin-top: 20px;
+    margin-right: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    
+  }
+  
+  .dashboard-link:hover {
+    background-color: #0056b3;
+  }
+
+  .dashboard-readme {
+    max-width: 800px;
+    margin: 0 auto;
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  
