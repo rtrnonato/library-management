@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: library-manegment
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
