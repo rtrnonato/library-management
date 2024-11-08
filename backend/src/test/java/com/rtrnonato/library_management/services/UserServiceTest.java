@@ -62,7 +62,7 @@ public class UserServiceTest {
         User result = userService.findById(1L);
         assertNotNull(result);
         when(userRepository.findById(2L)).thenReturn(Optional.empty());
-        assertThrows(NoSuchElementException.class, () -> userService.findById(2L));
+        assertThrows(ResourceNotFoundException.class, () -> userService.findById(2L));
     }
 	
 	/**

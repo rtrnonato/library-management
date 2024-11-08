@@ -59,7 +59,7 @@ public class BookServiceTest {
         Book result = bookService.findById(1L);
         assertNotNull(result);
         when(bookRepository.findById(2L)).thenReturn(Optional.empty());
-        assertThrows(NoSuchElementException.class, () -> bookService.findById(2L));
+        assertThrows(ResourceNotFoundException.class, () -> bookService.findById(2L));
     }
 	
 	/**
