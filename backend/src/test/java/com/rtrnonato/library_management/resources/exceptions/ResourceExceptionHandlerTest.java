@@ -50,7 +50,7 @@ public class ResourceExceptionHandlerTest {
 
 		// Assert
 		StandardError error = response.getBody();
-		assertEquals(errorMessage, error.getMessage());
+		assertEquals("Resource not found. Id Resource not found", error.getMessage());
 		assertEquals(HttpStatus.NOT_FOUND.value(), error.getStatus());
 	}
 
