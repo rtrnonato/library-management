@@ -1,14 +1,17 @@
-# 1. Use uma imagem oficial do Java como base
-FROM openjdk:17-jdk-slim
-
-# 2. Define o diretório de trabalho dentro do container
+# Etapa 1: Build
+FROM maven:3.8.7-openjdk-17 AS build
 WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn package -DskipTests
 
-# 3. Copia o JAR gerado para o container
-COPY target/*.jar app.jar
+# Etapa 2: Execução
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 
-# 4. Expõe a porta em que a aplicação Spring Boot vai rodar (padrão é 8080)
+# Expondo a porta padrão do Spring Boot
 EXPOSE 8080
 
-# 5. Define o comando para rodar a aplicação
+# Comando para iniciar a aplicação
 ENTRYPOINT ["java", "-jar", "-Dserver.port=8080", "app.jar"]
