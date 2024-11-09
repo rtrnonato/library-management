@@ -1,5 +1,5 @@
 # Etapa 1: Build
-FROM maven:3.8.6-openjdk-17 AS build
+FROM maven:3.9.9-eclipse-temurin-11 AS build
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src
