@@ -20,7 +20,7 @@ WORKDIR /app
 COPY --from=builder /app/target/library_management-0.0.1-SNAPSHOT.jar app.jar
 
 # Configurar o comando de inicialização
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "-Dserver.port=${PORT}", "-jar", "app.jar"]
 
 # Expor a porta utilizada pelo Spring Boot
 EXPOSE 8080
