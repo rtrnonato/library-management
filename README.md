@@ -14,7 +14,7 @@ Library Management é uma aplicação backend desenvolvida com Spring Boot e int
 - Empréstimo de livros
 - Devolução de livros
 
-...
+---
 
 # 📚 Documentação
 você pode acessar a documentação interativa da API via Swagger:
