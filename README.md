@@ -73,7 +73,7 @@ https://library-management-c3c3.onrender.com/swagger-ui/index.html#/
 
 Artur Nonato de Macedo
 
-💼 LinkedIn: https://www.linkedin.com/in/arturnonato
-📧 E-mail: rtrnonato@gmail.com
-🌐 GitHub: https://github.com/rtrnonato
-🕗 WakaTime: https://wakatime.com/@018bca24-1de0-4f19-91a5-3a111557f794
+💼 **LinkedIn**: https://www.linkedin.com/in/arturnonato
+📧 **E-mail**: rtrnonato@gmail.com
+🌐 **GitHub**: https://github.com/rtrnonato
+🕗 **WakaTime**: https://wakatime.com/@018bca24-1de0-4f19-91a5-3a111557f794
