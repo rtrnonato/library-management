@@ -1,34 +1,46 @@
-# Library Management System
+# 📚 Library Management
+[![NPM](https://img.shields.io/npm/l/react)](https://github.com/rtrnonato/library-management/blob/main/LICENSE)
 
-O **Library Management System** é uma aplicação para gerenciar empréstimos de livros, permitindo que usuários possam emprestar e devolver livros de uma biblioteca. Este projeto foi desenvolvido utilizando Spring Boot e PostgreSQL.
+---
 
-## Features
+## 📖 Sobre o Projeto
+
+Library Management é uma aplicação backend desenvolvida com Spring Boot e integrada ao banco de dados PostgreSQL. Seu objetivo é permitir operações como o cadastro de livros, gerenciamento de usuários e empréstimos.
+
+### Funcionalidades principais:
 
 - Cadastro de usuários
 - Cadastro de livros
 - Empréstimo de livros
 - Devolução de livros
-- Listagem de livros disponíveis e emprestados
-- Relatório de empréstimos
 
 ...
 
-## Documentação
+# 📚 Documentação
+você pode acessar a documentação interativa da API via Swagger:
+https://library-management-c3c3.onrender.com/swagger-ui/index.html#/
 
-### Diagramas UML
+---
 
-O diagrama UML fornecem uma visão geral da arquitetura e dos componentes do sistema.
+# 🛠️ Tecnologias Utilizadas
 
-- [Domain Model](docs/uml/Domain Model.png)
+- **Java 17**: Linguagem de programação.
+- **Spring Boot 3.2.1**: Framework para desenvolvimento backend.
+- **PostgreSQL**: Banco de dados relacional.
+- **Hibernate**: ORM para mapeamento de entidades.
+- **Swagger/OpenAPI**: Documentação interativa.
+- **Maven**: Gerenciador de dependências.
+- **Render**: Implantação em produção.
+  
+---
+
+# 🚀 Como Executar o Projeto
 
 ## Pré-requisitos
 
-Antes de começar, você precisará ter as seguintes ferramentas instaladas:
-
-- [Java 21](https://www.oracle.com/java/technologies/javase-jdk21-downloads.html)
-- [Maven](https://maven.apache.org/install.html)
-- [PostgreSQL](https://www.postgresql.org/download/)
-- [PgAdmin](https://www.pgadmin.org/download/)
+1. **Java 17** instalado.
+2. **PostgreSQL** instalado e rodando.
+3. **Maven** configurado no sistema.
 
 ## Instalação
 
@@ -55,61 +67,13 @@ Antes de começar, você precisará ter as seguintes ferramentas instaladas:
     ```bash
     mvn spring-boot:run
     ```
+---
 
-## Uso
+## 👤 Autor
 
-### Endpoints Principais
+Artur Nonato de Macedo
 
-- **Criar Usuário**
-    - **POST** `/users`
-    - Request Body:
-    ```json
-    {
-      "name": "John Doe",
-      "email": "john.doe@example.com"
-    }
-    ```
-
-- **Criar Livro**
-    - **POST** `/books`
-    - Request Body:
-    ```json
-    {
-      "title": "Effective Java",
-      "author": "Joshua Bloch"
-    }
-    ```
-
-- **Empréstimo de Livro**
-    - **POST** `/loans`
-    - Request Body:
-    ```json
-    {
-      "userId": 1,
-      "bookIds": [1, 2]
-    }
-    ```
-
-- **Devolução de Livro**
-    - **POST** `loans/return`
-    - Request Body:
-    ```json
-    {
-      "userId": 1,
-      "bookIds": [1]
-    }
-    ```
-    
-## Contribuição
-
-Contribuições são bem-vindas! Por favor, siga os passos abaixo para contribuir:
-
-1. Fork o repositório
-2. Crie uma branch para sua feature (`git checkout -b feature/nova-feature`)
-3. Comite suas mudanças (`git commit -m 'Adiciona nova feature'`)
-4. Faça o push para a branch (`git push origin feature/nova-feature`)
-5. Abra um Pull Request
-
-## Licença
-
-Este projeto está licenciado sob a licença MIT - veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+💼 LinkedIn: https://www.linkedin.com/in/arturnonato
+📧 E-mail: rtrnonato@gmail.com
+🌐 GitHub: https://github.com/rtrnonato
+🕗 WakaTime: https://wakatime.com/@018bca24-1de0-4f19-91a5-3a111557f794
