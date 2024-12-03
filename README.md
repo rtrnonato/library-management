@@ -47,7 +47,7 @@ https://library-management-c3c3.onrender.com/swagger-ui/index.html#/
 1. Clone o repositório:
 
     ```bash
-    git clone https://github.com/seu-usuario/library_management.git
+    git clone https://github.com/rtrnonato/library_management.git
     cd library_management
     ```
 
